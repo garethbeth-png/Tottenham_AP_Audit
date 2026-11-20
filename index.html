@@ -47,7 +47,7 @@
 
         if ('serviceWorker' in navigator && window.isSecureContext) {
           const swCode = `
-            const CACHE_NAME = 'ap-audit-pwa-v5';
+            const CACHE_NAME = 'ap-audit-pwa-v6';
             self.addEventListener('install', () => self.skipWaiting());
             self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
             self.addEventListener('fetch', (e) => {
@@ -106,11 +106,11 @@
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 4mm !important;
       }
       @page {
         size: A4 portrait;
-        margin: 6mm;
+        margin: 4mm;
       }
     }
 
@@ -140,7 +140,7 @@
       <!-- Action Controls -->
       <div class="flex items-center space-x-2">
         <button type="button" onclick="saveDraftToStorage(true)" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-navy-800 hover:bg-slate-700 text-blue-200 border border-slate-600 transition flex items-center space-x-1">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 022 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
           <span class="hidden sm:inline">Save Draft</span>
         </button>
         <button type="button" onclick="triggerPrintExport()" class="px-3.5 py-1.5 text-xs font-bold rounded-md bg-emerald-600 hover:bg-emerald-500 text-white shadow transition flex items-center space-x-1">
@@ -205,7 +205,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">AP Hostname *</label>
-            <input type="text" id="ap_hostname" oninput="syncAllFields()" placeholder="e.g. TOT-AP-L2-014" class="w-full px-3 py-2 text-sm font-semibold border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="ap_hostname" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. TOT-AP-L2-014" class="w-full px-3 py-2 text-sm font-semibold uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
 
           <!-- Ethernet MAC Field + Scan Button -->
@@ -218,7 +218,7 @@
               </button>
             </div>
             <div class="relative">
-              <input type="text" id="ap_mac" oninput="syncAllFields()" placeholder="e.g. BC:3F:81:ED:DF:C0" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase">
+              <input type="text" id="ap_mac" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. BC:3F:81:ED:DF:C0" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase font-bold">
               <button type="button" onclick="openOcrModal('ap_mac')" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-blue-600">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               </button>
@@ -228,12 +228,12 @@
           <!-- AP Serial Number -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">AP Serial Number (S/N)</label>
-            <input type="text" id="ap_serial" oninput="syncAllFields()" placeholder="e.g. FGL2917L0MB" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase">
+            <input type="text" id="ap_serial" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. FGL2917L0MB" class="w-full px-3 py-2 text-sm font-mono uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-bold">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Asset Tag Reference</label>
-            <input type="text" id="asset_tag" oninput="syncAllFields()" placeholder="e.g. AT-99402" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="asset_tag" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. AT-99402" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Room / Grid / Location Ref</label>
@@ -241,7 +241,7 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Patch Panel & Port ID</label>
-            <input type="text" id="patch_port" oninput="syncAllFields()" placeholder="e.g. PP-02 / Port 24" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="patch_port" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. PP-02 / Port 24" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
         </div>
 
@@ -283,8 +283,8 @@
           <!-- Photo Slot 1 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
             <span class="text-xs font-bold text-slate-700 text-center mb-1">1. AP Serial / MAC Label</span>
-            <div id="photo-preview-1" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative">
-              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            <div id="photo-preview-1" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
+              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
             </div>
             <div class="w-full flex items-center justify-between mt-2 space-x-1">
@@ -297,8 +297,8 @@
           <!-- Photo Slot 2 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
             <span class="text-xs font-bold text-slate-700 text-center mb-1">2. Mounted AP View</span>
-            <div id="photo-preview-2" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative">
-              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            <div id="photo-preview-2" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
+              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
             </div>
             <div class="w-full flex items-center justify-between mt-2 space-x-1">
@@ -311,8 +311,8 @@
           <!-- Photo Slot 3 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
             <span class="text-xs font-bold text-slate-700 text-center mb-1">3. Patch Panel Outlet</span>
-            <div id="photo-preview-3" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative">
-              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            <div id="photo-preview-3" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
+              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
             </div>
             <div class="w-full flex items-center justify-between mt-2 space-x-1">
@@ -325,8 +325,8 @@
           <!-- Photo Slot 4 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
             <span class="text-xs font-bold text-slate-700 text-center mb-1">4. Switch Port / LED</span>
-            <div id="photo-preview-4" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative">
-              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            <div id="photo-preview-4" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
+              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
             </div>
             <div class="w-full flex items-center justify-between mt-2 space-x-1">
@@ -339,8 +339,8 @@
           <!-- Photo Slot 5 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
             <span class="text-xs font-bold text-slate-700 text-center mb-1">5. Wider Area Context</span>
-            <div id="photo-preview-5" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative">
-              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            <div id="photo-preview-5" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
+              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
             </div>
             <div class="w-full flex items-center justify-between mt-2 space-x-1">
@@ -353,8 +353,8 @@
           <!-- Photo Slot 6 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
             <span class="text-xs font-bold text-slate-700 text-center mb-1">6. Cable / Drop Note</span>
-            <div id="photo-preview-6" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative">
-              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+            <div id="photo-preview-6" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
+              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
             </div>
             <div class="w-full flex items-center justify-between mt-2 space-x-1">
@@ -382,7 +382,7 @@
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-semibold text-slate-600">Auditor / Engineer Signature</label>
-              <button type="button" onclick="clearSignature()" class="text-xs text-rose-600 hover:underline">Clear Signature</button>
+              <button type="button" onclick="clearSignature()" class="text-xs text-rose-600 hover:underline font-semibold">Clear Signature</button>
             </div>
             <div class="border border-slate-300 rounded-lg bg-slate-50 overflow-hidden">
               <canvas id="signature-pad" class="w-full h-28 bg-white cursor-crosshair"></canvas>
@@ -411,9 +411,9 @@
     </div>
 
     <!-- TAB 2: PREVIEW & PRINT SHEET -->
-    <div id="tab-content-preview" class="hidden">
-      <div class="mb-4 flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-slate-200 no-print">
-        <span class="text-xs text-slate-600 font-medium">A4 Single-Page Live Audit Preview</span>
+    <div id="tab-content-preview" class="hidden space-y-4">
+      <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-slate-200 no-print">
+        <span class="text-xs text-slate-600 font-medium">A4 Single-Page Live Audit Sheet</span>
         <div class="flex items-center space-x-2">
           <button type="button" onclick="switchTab('form')" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md">
             &larr; Back to Edit
@@ -425,101 +425,101 @@
         </div>
       </div>
 
-      <!-- Live A4 Single Page Print Sheet -->
-      <div id="print-sheet" class="bg-white text-slate-900 border border-slate-300 rounded-lg shadow-lg p-6 max-w-[210mm] mx-auto text-xs space-y-4">
+      <!-- Live A4 Single Page Print Sheet (Compacted for Zero Cutoff) -->
+      <div id="print-sheet" class="bg-white text-slate-900 border border-slate-300 rounded-lg shadow-lg p-4 sm:p-5 max-w-[210mm] mx-auto text-xs space-y-3 overflow-visible">
 
         <!-- Sheet Header -->
-        <div class="flex items-start justify-between border-b-2 border-navy-900 pb-3">
+        <div class="flex items-center justify-between border-b-2 border-navy-900 pb-2">
           <div>
-            <h1 class="text-lg font-extrabold text-navy-900 uppercase tracking-wide">Tottenham Wi-Fi Upgrade Project</h1>
+            <h1 class="text-base sm:text-lg font-extrabold text-navy-900 uppercase tracking-wide leading-tight">Tottenham Wi-Fi Upgrade Project</h1>
             <h2 class="text-xs font-bold text-blue-700">Access Point Installation & Quality Audit Sheet</h2>
           </div>
           <div class="text-right">
-            <div class="px-2.5 py-1 bg-navy-900 text-white font-mono font-bold rounded text-xs" id="prev_hostname_badge">
+            <div class="px-2.5 py-1 bg-navy-900 text-white font-mono font-bold rounded text-xs tracking-wider uppercase inline-block" id="prev_hostname_badge">
               AP-HOSTNAME
             </div>
-            <span class="text-[10px] text-slate-500 block mt-1" id="prev_date_stamp">Date: 2026-11-20</span>
+            <span class="text-[10px] text-slate-500 block mt-0.5" id="prev_date_stamp">Date: 2026-11-20</span>
           </div>
         </div>
 
         <!-- Meta Summary Grid -->
-        <div class="grid grid-cols-4 gap-2 bg-slate-50 p-2.5 rounded border border-slate-200">
+        <div class="grid grid-cols-4 gap-2 bg-slate-50 p-2 rounded border border-slate-200 text-[11px]">
           <div>
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">Auditor</span>
-            <span class="font-semibold text-slate-800" id="prev_auditor">-</span>
+            <span class="text-[9px] uppercase font-bold text-slate-400 block">Auditor</span>
+            <span class="font-semibold text-slate-800 truncate block" id="prev_auditor">-</span>
           </div>
           <div>
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">Venue / Building</span>
-            <span class="font-semibold text-slate-800" id="prev_building">Tottenham Stadium</span>
+            <span class="text-[9px] uppercase font-bold text-slate-400 block">Venue / Building</span>
+            <span class="font-semibold text-slate-800 truncate block" id="prev_building">Tottenham Stadium</span>
           </div>
           <div>
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">Floor Level</span>
-            <span class="font-semibold text-slate-800" id="prev_floor">-</span>
+            <span class="text-[9px] uppercase font-bold text-slate-400 block">Floor Level</span>
+            <span class="font-semibold text-slate-800 truncate block" id="prev_floor">-</span>
           </div>
           <div>
-            <span class="text-[10px] uppercase font-bold text-slate-400 block">Location Ref</span>
-            <span class="font-semibold text-slate-800" id="prev_room">-</span>
+            <span class="text-[9px] uppercase font-bold text-slate-400 block">Location Ref</span>
+            <span class="font-semibold text-slate-800 truncate block" id="prev_room">-</span>
           </div>
         </div>
 
         <!-- AP & Wiring Details Grid -->
-        <div class="grid grid-cols-2 gap-3">
-          <div class="border border-slate-200 rounded p-2.5 space-y-1.5">
-            <h3 class="font-bold text-navy-900 border-b pb-1 text-[11px] uppercase">Access Point Info</h3>
-            <div class="flex justify-between"><span class="text-slate-500">Ethernet MAC:</span> <span class="font-mono font-bold text-slate-900" id="prev_mac">-</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Serial Number:</span> <span class="font-mono font-semibold" id="prev_serial">-</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Asset Tag:</span> <span class="font-semibold" id="prev_asset">-</span></div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="border border-slate-200 rounded p-2 space-y-1 bg-white">
+            <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[10px] uppercase tracking-wider">Access Point Info</h3>
+            <div class="flex justify-between text-[11px]"><span class="text-slate-500">Ethernet MAC:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_mac">-</span></div>
+            <div class="flex justify-between text-[11px]"><span class="text-slate-500">Serial Number:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_serial">-</span></div>
+            <div class="flex justify-between text-[11px]"><span class="text-slate-500">Asset Tag:</span> <span class="font-bold text-slate-900 uppercase" id="prev_asset">-</span></div>
           </div>
-          <div class="border border-slate-200 rounded p-2.5 space-y-1.5">
-            <h3 class="font-bold text-navy-900 border-b pb-1 text-[11px] uppercase">Cable & Mounting Info</h3>
-            <div class="flex justify-between"><span class="text-slate-500">Patch Panel / Port:</span> <span class="font-semibold text-slate-900" id="prev_patch">-</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Mounting Type:</span> <span class="font-semibold text-slate-900" id="prev_mount">-</span></div>
-            <div class="flex justify-between"><span class="text-slate-500">Audit Status:</span> <span class="font-bold text-emerald-700">COMPLETED &amp; VERIFIED</span></div>
+          <div class="border border-slate-200 rounded p-2 space-y-1 bg-white">
+            <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[10px] uppercase tracking-wider">Cable & Mounting Info</h3>
+            <div class="flex justify-between text-[11px]"><span class="text-slate-500">Patch Panel / Port:</span> <span class="font-bold text-slate-900 uppercase" id="prev_patch">-</span></div>
+            <div class="flex justify-between text-[11px]"><span class="text-slate-500">Mounting Type:</span> <span class="font-semibold text-slate-900" id="prev_mount">-</span></div>
+            <div class="flex justify-between text-[11px]"><span class="text-slate-500">Audit Status:</span> <span class="font-bold text-emerald-700 uppercase">COMPLETED &amp; VERIFIED</span></div>
           </div>
         </div>
 
-        <!-- 6 Photo Grid on Print Sheet -->
+        <!-- 6 Photo Grid on Print Sheet (Compact Heights to Prevent Page Overflow) -->
         <div>
-          <h3 class="font-bold text-navy-900 text-[11px] uppercase mb-1.5">Photographic Verification Records (6 Slots)</h3>
+          <h3 class="font-bold text-navy-900 text-[10px] uppercase tracking-wider mb-1">Photographic Verification Records (6 Slots)</h3>
           <div class="grid grid-cols-3 gap-2">
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">1. MAC / Label</span>
-              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5 truncate">1. MAC / Label</span>
+              <div class="w-full h-16 sm:h-20 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
                 <img id="prev-img-1" class="w-full h-full object-cover hidden" alt="Label">
                 <span id="prev-placeholder-1" class="text-[9px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">2. Mounted AP</span>
-              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5 truncate">2. Mounted AP</span>
+              <div class="w-full h-16 sm:h-20 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
                 <img id="prev-img-2" class="w-full h-full object-cover hidden" alt="Mounted">
                 <span id="prev-placeholder-2" class="text-[9px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">3. Patch Outlet</span>
-              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5 truncate">3. Patch Outlet</span>
+              <div class="w-full h-16 sm:h-20 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
                 <img id="prev-img-3" class="w-full h-full object-cover hidden" alt="Patch">
                 <span id="prev-placeholder-3" class="text-[9px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">4. Switch Port</span>
-              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5 truncate">4. Switch Port</span>
+              <div class="w-full h-16 sm:h-20 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
                 <img id="prev-img-4" class="w-full h-full object-cover hidden" alt="Switch">
                 <span id="prev-placeholder-4" class="text-[9px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">5. Area View</span>
-              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5 truncate">5. Area View</span>
+              <div class="w-full h-16 sm:h-20 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
                 <img id="prev-img-5" class="w-full h-full object-cover hidden" alt="Area">
                 <span id="prev-placeholder-5" class="text-[9px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">6. Drop Note</span>
-              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5 truncate">6. Drop Note</span>
+              <div class="w-full h-16 sm:h-20 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
                 <img id="prev-img-6" class="w-full h-full object-cover hidden" alt="Notes">
                 <span id="prev-placeholder-6" class="text-[9px] text-slate-400">No Image</span>
               </div>
@@ -527,19 +527,19 @@
           </div>
         </div>
 
-        <!-- Notes & Signature Footer -->
-        <div class="grid grid-cols-3 gap-3 border-t border-slate-200 pt-2.5">
+        <!-- Notes & Signature Footer (Compact Layout) -->
+        <div class="grid grid-cols-3 gap-2.5 border-t border-slate-200 pt-2">
           <div class="col-span-2">
-            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Field Notes & Observations</span>
-            <p id="prev_notes" class="text-[11px] text-slate-700 italic bg-slate-50 p-2 rounded border border-slate-100 min-h-[50px]">
+            <span class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Field Notes & Observations</span>
+            <p id="prev_notes" class="text-[10px] text-slate-700 italic bg-slate-50 p-2 rounded border border-slate-200 min-h-[42px] max-h-[55px] overflow-hidden">
               No notes entered.
             </p>
           </div>
           <div class="text-center">
-            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Auditor Sign-off</span>
-            <div class="w-full h-14 border border-slate-200 rounded bg-slate-50 flex items-center justify-center overflow-hidden">
+            <span class="text-[9px] font-bold text-slate-500 uppercase block mb-0.5">Auditor Sign-off</span>
+            <div class="w-full h-12 border border-slate-200 rounded bg-slate-50 flex items-center justify-center overflow-hidden">
               <img id="prev_signature_img" class="max-h-full max-w-full object-contain hidden" alt="Signature">
-              <span id="prev_sig_placeholder" class="text-[10px] text-slate-400 italic">Unsigned</span>
+              <span id="prev_sig_placeholder" class="text-[9px] text-slate-400 italic">Unsigned</span>
             </div>
           </div>
         </div>
@@ -595,7 +595,7 @@
         <!-- Detected Value Edit Box -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Detected / Editable Value</label>
-          <input type="text" id="ocr-result-input" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 uppercase font-bold text-navy-900 bg-slate-50" placeholder="Extracted MAC will appear here">
+          <input type="text" id="ocr-result-input" oninput="this.value = this.value.toUpperCase();" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 uppercase font-bold text-navy-900 bg-slate-50" placeholder="Extracted MAC will appear here">
           <p id="ocr-msg" class="text-[11px] text-slate-500 mt-1">Text detected. Please verify or correct the extracted value above.</p>
         </div>
       </div>
@@ -675,10 +675,22 @@
       }, 3000);
     }
 
-    // FORM & PREVIEW SYNCHRONIZATION
+    // FORM & PREVIEW SYNCHRONIZATION (WITH AUTO-UPPERCASE)
     function syncAllFields() {
-      const hostname = document.getElementById('ap_hostname').value.trim() || 'AP-HOSTNAME';
-      document.getElementById('prev_hostname_badge').textContent = hostname;
+      // Force uppercase on input values
+      const apHostnameEl = document.getElementById('ap_hostname');
+      if (apHostnameEl) apHostnameEl.value = apHostnameEl.value.toUpperCase();
+      const apMacEl = document.getElementById('ap_mac');
+      if (apMacEl) apMacEl.value = apMacEl.value.toUpperCase();
+      const apSerialEl = document.getElementById('ap_serial');
+      if (apSerialEl) apSerialEl.value = apSerialEl.value.toUpperCase();
+      const assetTagEl = document.getElementById('asset_tag');
+      if (assetTagEl) assetTagEl.value = assetTagEl.value.toUpperCase();
+      const patchPortEl = document.getElementById('patch_port');
+      if (patchPortEl) patchPortEl.value = patchPortEl.value.toUpperCase();
+
+      const hostname = (apHostnameEl ? apHostnameEl.value.trim() : '') || 'AP-HOSTNAME';
+      document.getElementById('prev_hostname_badge').textContent = hostname.toUpperCase();
 
       const auditor = document.getElementById('auditor_name').value.trim() || '-';
       document.getElementById('prev_auditor').textContent = auditor;
@@ -695,17 +707,17 @@
       const room = document.getElementById('room_grid').value.trim() || '-';
       document.getElementById('prev_room').textContent = room;
 
-      const mac = document.getElementById('ap_mac').value.trim() || '-';
-      document.getElementById('prev_mac').textContent = mac;
+      const mac = (apMacEl ? apMacEl.value.trim() : '') || '-';
+      document.getElementById('prev_mac').textContent = mac.toUpperCase();
 
-      const serial = document.getElementById('ap_serial').value.trim() || '-';
-      document.getElementById('prev_serial').textContent = serial;
+      const serial = (apSerialEl ? apSerialEl.value.trim() : '') || '-';
+      document.getElementById('prev_serial').textContent = serial.toUpperCase();
 
-      const asset = document.getElementById('asset_tag').value.trim() || '-';
-      document.getElementById('prev_asset').textContent = asset;
+      const asset = (assetTagEl ? assetTagEl.value.trim() : '') || '-';
+      document.getElementById('prev_asset').textContent = asset.toUpperCase();
 
-      const patch = document.getElementById('patch_port').value.trim() || '-';
-      document.getElementById('prev_patch').textContent = patch;
+      const patch = (patchPortEl ? patchPortEl.value.trim() : '') || '-';
+      document.getElementById('prev_patch').textContent = patch.toUpperCase();
 
       // Checkboxes string
       const mounts = [];
@@ -832,7 +844,7 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          const maxDim = 1000;
+          const maxDim = 800; // Efficient size for crisp 1-page PDF
           let w = img.width;
           let h = img.height;
           if (w > maxDim || h > maxDim) {
@@ -843,7 +855,7 @@
           canvas.height = h;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, w, h);
-          const compressedData = canvas.toDataURL('image/jpeg', 0.82);
+          const compressedData = canvas.toDataURL('image/jpeg', 0.80);
 
           photoData[slot] = compressedData;
           updatePhotoSlotUI(slot);
@@ -863,7 +875,7 @@
         container.innerHTML = `<img src="${photoData[slot]}" class="w-full h-full object-cover rounded-md" alt="Slot ${slot}">`;
       } else {
         container.innerHTML = `
-          <svg class="w-8 h-8 mb-1 stroke-current text-slate-400" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+          <svg class="w-7 h-7 mb-1 stroke-current text-slate-400" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
           <span class="text-[10px] text-slate-500">No photo added</span>
         `;
       }
@@ -885,12 +897,12 @@
           install_date: document.getElementById('install_date').value,
           building_name: document.getElementById('building_name').value,
           floor_level: document.getElementById('floor_level').value,
-          ap_hostname: document.getElementById('ap_hostname').value,
-          ap_mac: document.getElementById('ap_mac').value,
-          ap_serial: document.getElementById('ap_serial').value,
-          asset_tag: document.getElementById('asset_tag').value,
+          ap_hostname: document.getElementById('ap_hostname').value.toUpperCase(),
+          ap_mac: document.getElementById('ap_mac').value.toUpperCase(),
+          ap_serial: document.getElementById('ap_serial').value.toUpperCase(),
+          asset_tag: document.getElementById('asset_tag').value.toUpperCase(),
           room_grid: document.getElementById('room_grid').value,
-          patch_port: document.getElementById('patch_port').value,
+          patch_port: document.getElementById('patch_port').value.toUpperCase(),
           mount_tbar: document.getElementById('mount_tbar').checked,
           mount_solid: document.getElementById('mount_solid').checked,
           mount_wall: document.getElementById('mount_wall').checked,
@@ -915,12 +927,12 @@
         if (draft.install_date) document.getElementById('install_date').value = draft.install_date;
         if (draft.building_name) document.getElementById('building_name').value = draft.building_name;
         if (draft.floor_level) document.getElementById('floor_level').value = draft.floor_level;
-        if (draft.ap_hostname) document.getElementById('ap_hostname').value = draft.ap_hostname;
-        if (draft.ap_mac) document.getElementById('ap_mac').value = draft.ap_mac;
-        if (draft.ap_serial) document.getElementById('ap_serial').value = draft.ap_serial;
-        if (draft.asset_tag) document.getElementById('asset_tag').value = draft.asset_tag;
+        if (draft.ap_hostname) document.getElementById('ap_hostname').value = draft.ap_hostname.toUpperCase();
+        if (draft.ap_mac) document.getElementById('ap_mac').value = draft.ap_mac.toUpperCase();
+        if (draft.ap_serial) document.getElementById('ap_serial').value = draft.ap_serial.toUpperCase();
+        if (draft.asset_tag) document.getElementById('asset_tag').value = draft.asset_tag.toUpperCase();
         if (draft.room_grid) document.getElementById('room_grid').value = draft.room_grid;
-        if (draft.patch_port) document.getElementById('patch_port').value = draft.patch_port;
+        if (draft.patch_port) document.getElementById('patch_port').value = draft.patch_port.toUpperCase();
 
         document.getElementById('mount_tbar').checked = !!draft.mount_tbar;
         document.getElementById('mount_solid').checked = !!draft.mount_solid;
@@ -960,7 +972,7 @@
       showToast('Ready for next AP');
     }
 
-    // MULTI-PASS OCR ENGINE
+    // MULTI-PASS OCR ENGINE WITH FORCED UPPERCASE
     function openOcrModal(targetFieldId) {
       currentOcrTargetId = targetFieldId;
       document.getElementById('ocr-modal').classList.remove('hidden');
@@ -1057,7 +1069,7 @@
       try {
         const candidates = [];
 
-        // Pass 1: Lower 60% of image crop (Where MAC lines sit on Cisco/Meraki stickers)
+        // Pass 1: Lower 60% of image crop
         const cropLower = document.createElement('canvas');
         cropLower.width = sourceCanvas.width;
         cropLower.height = Math.round(sourceCanvas.height * 0.6);
@@ -1065,7 +1077,7 @@
         ctxL.drawImage(sourceCanvas, 0, Math.round(sourceCanvas.height * 0.4), cropLower.width, cropLower.height, 0, 0, cropLower.width, cropLower.height);
         candidates.push(enhanceContrastCanvas(cropLower, 1.8));
 
-        // Pass 2: Full Frame with High Contrast + Binarization
+        // Pass 2: Full Frame with High Contrast
         candidates.push(enhanceContrastCanvas(sourceCanvas, 2.2));
 
         // Pass 3: Center 70% Zoom Crop
@@ -1084,7 +1096,7 @@
           const text = result.data.text || '';
           const found = parseMacFromOcrText(text);
           if (found) {
-            extractedMac = found;
+            extractedMac = found.toUpperCase();
             break;
           }
         }
@@ -1092,10 +1104,10 @@
         statusDiv.classList.add('hidden');
 
         if (extractedMac) {
-          inputEl.value = extractedMac;
+          inputEl.value = extractedMac.toUpperCase();
           msgText.textContent = '✨ Valid MAC address detected! Verify or edit above.';
           msgText.className = 'text-[11px] text-emerald-600 font-bold mt-1';
-          showToast(`MAC Detected: ${extractedMac}`);
+          showToast(`MAC Detected: ${extractedMac.toUpperCase()}`);
         } else {
           msgText.textContent = '⚠️ No MAC pattern detected. Zoom closer to the "MAC:" line or type/paste MAC above.';
           msgText.className = 'text-[11px] text-amber-600 font-bold mt-1';
@@ -1153,7 +1165,7 @@
               .replace(/S/g, '5').replace(/Z/g, '2');
 
             if (/^[0-9A-F]{12}$/.test(candidate)) {
-              return candidate.match(/.{1,2}/g).join(':');
+              return candidate.match(/.{1,2}/g).join(':').toUpperCase();
             }
           }
         }
@@ -1162,7 +1174,7 @@
     }
 
     function applyOcrResult() {
-      const val = document.getElementById('ocr-result-input').value.trim();
+      const val = document.getElementById('ocr-result-input').value.trim().toUpperCase();
       if (val && currentOcrTargetId) {
         const targetEl = document.getElementById(currentOcrTargetId);
         if (targetEl) {
@@ -1175,7 +1187,7 @@
       closeOcrModal();
     }
 
-    // DIRECT PDF FILE DOWNLOAD (html2pdf.js)
+    // DIRECT PDF FILE DOWNLOAD (1-PAGE A4 FIT)
     function triggerPrintExport() {
       syncAllFields();
       saveDraftToStorage(false);
@@ -1186,12 +1198,12 @@
       }
 
       const element = document.getElementById('print-sheet');
-      const hostname = document.getElementById('ap_hostname').value.trim() || 'AP';
-      const cleanHostname = hostname.replace(/[^a-zA-Z0-9_-]/g, '_');
+      const hostname = document.getElementById('ap_hostname').value.trim().toUpperCase() || 'AP';
+      const cleanHostname = hostname.replace(/[^A-Z0-9_-]/g, '_');
       const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
       const filename = `Tottenham_AP_Audit_${cleanHostname}_${dateVal}.pdf`;
 
-      showToast('Generating PDF file...');
+      showToast('Generating 1-page PDF file...');
 
       const previewTab = document.getElementById('tab-content-preview');
       const formTab = document.getElementById('tab-content-form');
@@ -1203,10 +1215,10 @@
       }
 
       const opt = {
-        margin:       [4, 4, 4, 4],
+        margin:       [2, 2, 2, 2], // Tighter 2mm margin to fit entire sheet on 1 page
         filename:     filename,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 1.5, useCORS: true, logging: false },
+        image:        { type: 'jpeg', quality: 0.96 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
@@ -1216,7 +1228,7 @@
             previewTab.classList.add('hidden');
             formTab.classList.remove('hidden');
           }
-          showToast('PDF File Downloaded!');
+          showToast('PDF File Saved!');
         })
         .catch((err) => {
           console.error('PDF generation error:', err);
