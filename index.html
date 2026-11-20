@@ -47,7 +47,7 @@
 
         if ('serviceWorker' in navigator && window.isSecureContext) {
           const swCode = `
-            const CACHE_NAME = 'ap-audit-pwa-v3';
+            const CACHE_NAME = 'ap-audit-pwa-v4';
             self.addEventListener('install', () => self.skipWaiting());
             self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
             self.addEventListener('fetch', (e) => {
@@ -92,9 +92,870 @@
 
   <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<!-- ... existing code -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Print Sheet Specific Formatting */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      #print-sheet {
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+    }
+
+    /* Custom Canvas Touch Action */
+    canvas {
+      touch-action: none;
+    }
+  </style>
+</head>
+<body class="h-full font-sans antialiased text-slate-800 bg-slate-100 flex flex-col min-h-screen selection:bg-blue-500 selection:text-white">
+
+  <!-- Top App Navigation Header -->
+  <header class="bg-navy-900 text-white shadow-md sticky top-0 z-30 no-print">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 3C7.03 3 3 7.03 3 12c0 2.22.81 4.25 2.15 5.82L3.7 20.3c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l2.48-2.48C9.16 20.19 10.53 20.5 12 20.5c4.97 0 9-4.03 9-8.5S16.97 3 12 3zm0 15.5c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base font-bold tracking-tight text-white leading-tight">Tottenham Wi-Fi Upgrade</h1>
+          <p class="text-xs text-blue-200">AP Installation Audit Sheet</p>
+        </div>
+      </div>
+
+      <!-- Header Action Buttons -->
+      <div class="flex items-center space-x-2">
+        <button onclick="saveDraftToStorage(true)" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-navy-800 hover:bg-slate-700 text-blue-200 border border-slate-600 transition flex items-center space-x-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+          <span class="hidden sm:inline">Save Draft</span>
+        </button>
+        <button onclick="triggerPrintExport()" class="px-3.5 py-1.5 text-xs font-bold rounded-md bg-emerald-600 hover:bg-emerald-500 text-white shadow transition flex items-center space-x-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Save PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-5xl mx-auto px-4 flex border-t border-slate-700/60 text-sm font-medium">
+      <button id="tab-btn-form" onclick="switchTab('form')" class="py-2.5 px-4 border-b-2 border-blue-400 text-blue-400 font-semibold flex items-center space-x-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+        <span>1. Audit Form</span>
+      </button>
+      <button id="tab-btn-preview" onclick="switchTab('preview')" class="py-2.5 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+        <span>2. 1-Page PDF Sheet</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6">
+
+    <!-- TAB 1: AUDIT FORM -->
+    <div id="tab-content-form" class="space-y-6">
+
+      <!-- Section 1: Header Audit Info -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
+        <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+          <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">1</span>
+          <span>Audit Header Information</span>
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Auditor Name</label>
+            <input type="text" id="auditor_name" oninput="syncAllFields()" placeholder="e.g. John Doe" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Installation Date</label>
+            <input type="date" id="install_date" onchange="syncAllFields()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Building / Venue</label>
+            <input type="text" id="building_name" oninput="syncAllFields()" value="Tottenham Stadium" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Floor Level</label>
+            <input type="text" id="floor_level" oninput="syncAllFields()" placeholder="e.g. Level 2 Concours" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: AP Equipment & Location Details -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
+        <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+          <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">2</span>
+          <span>Access Point & Infrastructure Details</span>
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">AP Hostname *</label>
+            <input type="text" id="ap_hostname" oninput="syncAllFields()" placeholder="e.g. TOT-AP-L2-014" class="w-full px-3 py-2 text-sm font-semibold border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+
+          <!-- Ethernet MAC Field with Camera OCR Button -->
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-semibold text-slate-600">Ethernet MAC Address *</label>
+              <button type="button" onclick="openOcrModal('ap_mac')" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center space-x-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+                <span>Scan MAC</span>
+              </button>
+            </div>
+            <div class="relative">
+              <input type="text" id="ap_mac" oninput="syncAllFields()" placeholder="e.g. BC:3F:81:ED:DF:C0" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase">
+              <button type="button" onclick="openOcrModal('ap_mac')" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-blue-600">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- AP Serial Number -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">AP Serial Number (S/N)</label>
+            <input type="text" id="ap_serial" oninput="syncAllFields()" placeholder="e.g. FGL2917L0MB" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Asset Tag Reference</label>
+            <input type="text" id="asset_tag" oninput="syncAllFields()" placeholder="e.g. AT-99402" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Room / Grid / Location Ref</label>
+            <input type="text" id="room_grid" oninput="syncAllFields()" placeholder="e.g. Room 204 / Grid B4" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Patch Panel & Port ID</label>
+            <input type="text" id="patch_port" oninput="syncAllFields()" placeholder="e.g. PP-02 / Port 24" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+          </div>
+        </div>
+
+        <!-- Mounting Options Checkboxes -->
+        <div class="pt-2 border-t border-slate-100">
+          <label class="block text-xs font-semibold text-slate-600 mb-2">Mounting Type Verified</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+              <input type="checkbox" id="mount_tbar" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
+              <span>Ceiling T-Bar Grid</span>
+            </label>
+            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+              <input type="checkbox" id="mount_solid" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
+              <span>Solid Ceiling / Concrete</span>
+            </label>
+            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+              <input type="checkbox" id="mount_wall" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
+              <span>Wall Bracket</span>
+            </label>
+            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
+              <input type="checkbox" id="mount_pole" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
+              <span>Pole / Truss Mount</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: 6 Photographic Evidence Slots -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
+        <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">3</span>
+            <span>Photographic Evidence (6 Field Photos)</span>
+          </div>
+          <span class="text-xs text-slate-500 font-normal">Tap slot to capture or upload</span>
+        </h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+          <!-- Photo Slot 1 -->
+          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">1. AP Serial / MAC Label</span>
+            <div id="photo-preview-1" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
+              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+              <span class="text-[10px] text-slate-500">No photo added</span>
+            </div>
+            <div class="w-full flex items-center justify-between mt-2 space-x-1">
+              <button type="button" onclick="triggerPhotoCapture(1)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
+              <button type="button" onclick="clearPhoto(1)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
+            </div>
+            <input type="file" id="file-input-1" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 1)">
+          </div>
+
+          <!-- Photo Slot 2 -->
+          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">2. Mounted AP View</span>
+            <div id="photo-preview-2" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
+              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+              <span class="text-[10px] text-slate-500">No photo added</span>
+            </div>
+            <div class="w-full flex items-center justify-between mt-2 space-x-1">
+              <button type="button" onclick="triggerPhotoCapture(2)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
+              <button type="button" onclick="clearPhoto(2)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
+            </div>
+            <input type="file" id="file-input-2" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 2)">
+          </div>
+
+          <!-- Photo Slot 3 -->
+          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">3. Patch Panel Outlet</span>
+            <div id="photo-preview-3" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
+              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+              <span class="text-[10px] text-slate-500">No photo added</span>
+            </div>
+            <div class="w-full flex items-center justify-between mt-2 space-x-1">
+              <button type="button" onclick="triggerPhotoCapture(3)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
+              <button type="button" onclick="clearPhoto(3)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
+            </div>
+            <input type="file" id="file-input-3" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 3)">
+          </div>
+
+          <!-- Photo Slot 4 -->
+          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">4. Switch Port / LED</span>
+            <div id="photo-preview-4" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
+              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+              <span class="text-[10px] text-slate-500">No photo added</span>
+            </div>
+            <div class="w-full flex items-center justify-between mt-2 space-x-1">
+              <button type="button" onclick="triggerPhotoCapture(4)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
+              <button type="button" onclick="clearPhoto(4)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
+            </div>
+            <input type="file" id="file-input-4" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 4)">
+          </div>
+
+          <!-- Photo Slot 5 -->
+          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">5. Wider Area Context</span>
+            <div id="photo-preview-5" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
+              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+              <span class="text-[10px] text-slate-500">No photo added</span>
+            </div>
+            <div class="w-full flex items-center justify-between mt-2 space-x-1">
+              <button type="button" onclick="triggerPhotoCapture(5)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
+              <button type="button" onclick="clearPhoto(5)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
+            </div>
+            <input type="file" id="file-input-5" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 5)">
+          </div>
+
+          <!-- Photo Slot 6 -->
+          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">6. Cable / Drop Note</span>
+            <div id="photo-preview-6" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
+              <svg class="w-8 h-8 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+              <span class="text-[10px] text-slate-500">No photo added</span>
+            </div>
+            <div class="w-full flex items-center justify-between mt-2 space-x-1">
+              <button type="button" onclick="triggerPhotoCapture(6)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
+              <button type="button" onclick="clearPhoto(6)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
+            </div>
+            <input type="file" id="file-input-6" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 6)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Notes & Sign-Off -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
+        <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+          <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">4</span>
+          <span>Field Notes & Sign-Off Signature</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Field Observations & Cable Notes</label>
+            <textarea id="field_notes" oninput="syncAllFields()" rows="4" placeholder="Note any ceiling obstructions, cable test results, or mounting exceptions..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-semibold text-slate-600">Auditor / Engineer Signature</label>
+              <button type="button" onclick="clearSignature()" class="text-xs text-rose-600 hover:underline">Clear Signature</button>
+            </div>
+            <div class="border border-slate-300 rounded-lg bg-slate-50 overflow-hidden">
+              <canvas id="signature-pad" class="w-full h-28 bg-white cursor-crosshair"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Bottom Action Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+        <button type="button" onclick="startNextAP()" class="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 transition flex items-center justify-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          <span>Reset Form / Next AP</span>
+        </button>
+        <div class="w-full sm:w-auto flex items-center space-x-3">
+          <button type="button" onclick="switchTab('preview')" class="w-1/2 sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-lg bg-slate-700 hover:bg-slate-800 text-white transition">
+            Preview 1-Page Sheet
+          </button>
+          <button type="button" onclick="triggerPrintExport()" class="w-1/2 sm:w-auto px-5 py-2.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition flex items-center justify-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>Save PDF File</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: PREVIEW & PRINT SHEET -->
+    <div id="tab-content-preview" class="hidden">
+      <!-- Top Action Bar inside Preview Tab -->
+      <div class="mb-4 flex items-center justify-between bg-white p-3 rounded-lg shadow-sm border border-slate-200 no-print">
+        <span class="text-xs text-slate-600 font-medium">A4 Single-Page Live Audit Preview</span>
+        <div class="flex items-center space-x-2">
+          <button onclick="switchTab('form')" class="px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md">
+            &larr; Back to Edit
+          </button>
+          <button onclick="triggerPrintExport()" class="px-4 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-md shadow flex items-center space-x-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            <span>Save PDF File</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- THE PRINT SHEET (A4 Structured Layout) -->
+      <div id="print-sheet" class="bg-white text-slate-900 border border-slate-300 rounded-lg shadow-lg p-6 max-w-[210mm] mx-auto text-xs space-y-4">
+
+        <!-- Sheet Header -->
+        <div class="flex items-start justify-between border-b-2 border-navy-900 pb-3">
+          <div>
+            <h1 class="text-lg font-extrabold text-navy-900 uppercase tracking-wide">Tottenham Wi-Fi Upgrade Project</h1>
+            <h2 class="text-xs font-bold text-blue-700">Access Point Installation & Quality Audit Sheet</h2>
+          </div>
+          <div class="text-right">
+            <div class="px-2.5 py-1 bg-navy-900 text-white font-mono font-bold rounded text-xs" id="prev_hostname_badge">
+              AP-HOSTNAME
+            </div>
+            <span class="text-[10px] text-slate-500 block mt-1" id="prev_date_stamp">Date: 2026-11-20</span>
+          </div>
+        </div>
+
+        <!-- Meta Summary Grid -->
+        <div class="grid grid-cols-4 gap-2 bg-slate-50 p-2.5 rounded border border-slate-200">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Auditor</span>
+            <span class="font-semibold text-slate-800" id="prev_auditor">-</span>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Venue / Building</span>
+            <span class="font-semibold text-slate-800" id="prev_building">Tottenham Stadium</span>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Floor Level</span>
+            <span class="font-semibold text-slate-800" id="prev_floor">-</span>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-400 block">Location Ref</span>
+            <span class="font-semibold text-slate-800" id="prev_room">-</span>
+          </div>
+        </div>
+
+        <!-- AP & Wiring Details Grid -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="border border-slate-200 rounded p-2.5 space-y-1.5">
+            <h3 class="font-bold text-navy-900 border-b pb-1 text-[11px] uppercase">Access Point Info</h3>
+            <div class="flex justify-between"><span class="text-slate-500">Ethernet MAC:</span> <span class="font-mono font-bold text-slate-900" id="prev_mac">-</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Serial Number:</span> <span class="font-mono font-semibold" id="prev_serial">-</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Asset Tag:</span> <span class="font-semibold" id="prev_asset">-</span></div>
+          </div>
+          <div class="border border-slate-200 rounded p-2.5 space-y-1.5">
+            <h3 class="font-bold text-navy-900 border-b pb-1 text-[11px] uppercase">Cable & Mounting Info</h3>
+            <div class="flex justify-between"><span class="text-slate-500">Patch Panel / Port:</span> <span class="font-semibold text-slate-900" id="prev_patch">-</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Mounting Type:</span> <span class="font-semibold text-slate-900" id="prev_mount">-</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Audit Status:</span> <span class="font-bold text-emerald-700">COMPLETED &amp; VERIFIED</span></div>
+          </div>
+        </div>
+
+        <!-- 6 Photo Grid on Print Sheet -->
+        <div>
+          <h3 class="font-bold text-navy-900 text-[11px] uppercase mb-1.5">Photographic Verification Records (6 Slots)</h3>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">1. MAC / Label</span>
+              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+                <img id="prev-img-1" class="w-full h-full object-cover hidden" alt="Label">
+                <span id="prev-placeholder-1" class="text-[9px] text-slate-400">No Image</span>
+              </div>
+            </div>
+            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">2. Mounted AP</span>
+              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+                <img id="prev-img-2" class="w-full h-full object-cover hidden" alt="Mounted">
+                <span id="prev-placeholder-2" class="text-[9px] text-slate-400">No Image</span>
+              </div>
+            </div>
+            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">3. Patch Outlet</span>
+              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+                <img id="prev-img-3" class="w-full h-full object-cover hidden" alt="Patch">
+                <span id="prev-placeholder-3" class="text-[9px] text-slate-400">No Image</span>
+              </div>
+            </div>
+            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">4. Switch Port</span>
+              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+                <img id="prev-img-4" class="w-full h-full object-cover hidden" alt="Switch">
+                <span id="prev-placeholder-4" class="text-[9px] text-slate-400">No Image</span>
+              </div>
+            </div>
+            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">5. Area View</span>
+              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+                <img id="prev-img-5" class="w-full h-full object-cover hidden" alt="Area">
+                <span id="prev-placeholder-5" class="text-[9px] text-slate-400">No Image</span>
+              </div>
+            </div>
+            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
+              <span class="text-[9px] font-semibold text-slate-600 block mb-0.5">6. Drop Note</span>
+              <div class="w-full h-24 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
+                <img id="prev-img-6" class="w-full h-full object-cover hidden" alt="Notes">
+                <span id="prev-placeholder-6" class="text-[9px] text-slate-400">No Image</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes & Signature Footer -->
+        <div class="grid grid-cols-3 gap-3 border-t border-slate-200 pt-2.5">
+          <div class="col-span-2">
+            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Field Notes & Observations</span>
+            <p id="prev_notes" class="text-[11px] text-slate-700 italic bg-slate-50 p-2 rounded border border-slate-100 min-h-[50px]">
+              No notes entered.
+            </p>
+          </div>
+          <div class="text-center">
+            <span class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Auditor Sign-off</span>
+            <div class="w-full h-14 border border-slate-200 rounded bg-slate-50 flex items-center justify-center overflow-hidden">
+              <img id="prev_signature_img" class="max-h-full max-w-full object-contain hidden" alt="Signature">
+              <span id="prev_sig_placeholder" class="text-[10px] text-slate-400 italic">Unsigned</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- CAMERA & MULTI-PASS OCR MAC SCANNER MODAL -->
+  <div id="ocr-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[90vh]">
+
+      <div class="bg-navy-900 text-white px-4 py-3 flex items-center justify-between">
+        <h3 class="text-sm font-bold flex items-center space-x-2">
+          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+          <span>Scan Ethernet MAC Address</span>
+        </h3>
+        <button onclick="closeOcrModal()" class="text-slate-400 hover:text-white text-lg font-bold p-1">&times;</button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-3 flex-1">
+        <!-- Live Video Viewfinder -->
+        <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-700">
+          <video id="ocr-video" autoplay playsinline class="w-full h-full object-cover"></video>
+          <canvas id="ocr-canvas" class="hidden"></canvas>
+
+          <!-- Scanning Overlay Frame -->
+          <div class="absolute inset-4 border-2 border-dashed border-blue-400/70 rounded-lg pointer-events-none flex items-center justify-center">
+            <span class="bg-navy-900/80 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur">Position MAC Sticker Here</span>
+          </div>
+        </div>
+
+        <!-- Camera Control Buttons -->
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" onclick="captureLiveVideoFrame()" class="py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow transition">
+            Snap Frame
+          </button>
+          <button type="button" onclick="flipCamera()" class="py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
+            Flip Camera
+          </button>
+          <button type="button" onclick="triggerOcrFileUpload()" class="py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
+            Photo / File
+          </button>
+          <input type="file" id="ocr-file-input" accept="image/*" class="hidden" onchange="handleOcrFileSelect(event)">
+        </div>
+
+        <!-- OCR Processing Status -->
+        <div id="ocr-status" class="hidden p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 font-medium flex items-center space-x-2">
+          <svg class="w-4 h-4 animate-spin text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          <span id="ocr-status-text">Processing multi-pass scan...</span>
+        </div>
+
+        <!-- Detected Value Result & Edit Box -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Detected / Editable Value</label>
+          <input type="text" id="ocr-result-input" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 uppercase font-bold text-navy-900 bg-slate-50" placeholder="Extracted MAC will appear here">
+          <p id="ocr-msg" class="text-[11px] text-slate-500 mt-1">Text detected. Please verify or correct the extracted value above.</p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-4 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-end space-x-2">
+        <button type="button" onclick="closeOcrModal()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800">
+          Cancel
+        </button>
+        <button type="button" onclick="applyOcrResult()" class="px-5 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow">
+          Use Value
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- APPLICATION LOGIC JavaScript -->
+  <script>
+    // State management
+    const photoData = [null, null, null, null, null, null, null];
+    let currentCameraFacing = 'environment';
+    let mediaStream = null;
+    let currentOcrTargetId = 'ap_mac';
+
+    // Signature Canvas setup
+    let sigCanvas, sigCtx;
+    let isSigning = false;
+
+    window.onload = function() {
+      // Set default date to today
+      const today = new Date().toISOString().split('T')[0];
+      const dateEl = document.getElementById('install_date');
+      if (dateEl && !dateEl.value) dateEl.value = today;
+
+      initSignaturePad();
+      loadDraftFromStorage();
+      syncAllFields();
+    };
+
+    // TAB SWITCHING
+    function switchTab(tabName) {
+      const formTab = document.getElementById('tab-content-form');
+      const previewTab = document.getElementById('tab-content-preview');
+      const btnForm = document.getElementById('tab-btn-form');
+      const btnPreview = document.getElementById('tab-btn-preview');
+
+      if (tabName === 'form') {
+        formTab.classList.remove('hidden');
+        previewTab.classList.add('hidden');
+        btnForm.className = "py-2.5 px-4 border-b-2 border-blue-400 text-blue-400 font-semibold flex items-center space-x-2";
+        btnPreview.className = "py-2.5 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2";
+      } else {
+        syncAllFields();
+        formTab.classList.add('hidden');
+        previewTab.classList.remove('hidden');
+        btnPreview.className = "py-2.5 px-4 border-b-2 border-blue-400 text-blue-400 font-semibold flex items-center space-x-2";
+        btnForm.className = "py-2.5 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2";
+      }
+    }
+
+    // TOAST NOTIFIER (Replaces alerts)
+    function showToast(message, isError = false) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto px-4 py-2.5 rounded-lg shadow-lg text-xs font-semibold text-white transition-all transform duration-300 translate-y-2 ${isError ? 'bg-rose-600' : 'bg-navy-900 border border-slate-700'}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-y-2'), 10);
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // FORM & PREVIEW SYNCHRONIZATION
+    function syncAllFields() {
+      const hostname = document.getElementById('ap_hostname').value.trim() || 'AP-HOSTNAME';
+      document.getElementById('prev_hostname_badge').textContent = hostname;
+
+      const auditor = document.getElementById('auditor_name').value.trim() || '-';
+      document.getElementById('prev_auditor').textContent = auditor;
+
+      const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
+      document.getElementById('prev_date_stamp').textContent = `Date: ${dateVal}`;
+
+      const building = document.getElementById('building_name').value.trim() || 'Tottenham Stadium';
+      document.getElementById('prev_building').textContent = building;
+
+      const floor = document.getElementById('floor_level').value.trim() || '-';
+      document.getElementById('prev_floor').textContent = floor;
+
+      const room = document.getElementById('room_grid').value.trim() || '-';
+      document.getElementById('prev_room').textContent = room;
+
+      const mac = document.getElementById('ap_mac').value.trim() || '-';
+      document.getElementById('prev_mac').textContent = mac;
+
+      const serial = document.getElementById('ap_serial').value.trim() || '-';
+      document.getElementById('prev_serial').textContent = serial;
+
+      const asset = document.getElementById('asset_tag').value.trim() || '-';
+      document.getElementById('prev_asset').textContent = asset;
+
+      const patch = document.getElementById('patch_port').value.trim() || '-';
+      document.getElementById('prev_patch').textContent = patch;
+
+      // Mount checkboxes string
+      const mounts = [];
+      if (document.getElementById('mount_tbar').checked) mounts.push('T-Bar Ceiling');
+      if (document.getElementById('mount_solid').checked) mounts.push('Solid Ceiling');
+      if (document.getElementById('mount_wall').checked) mounts.push('Wall');
+      if (document.getElementById('mount_pole').checked) mounts.push('Pole/Truss');
+      document.getElementById('prev_mount').textContent = mounts.length > 0 ? mounts.join(', ') : 'Standard Bracket';
+
+      const notes = document.getElementById('field_notes').value.trim();
+      document.getElementById('prev_notes').textContent = notes || 'No notes entered.';
+
+      // Sync Photo Previews to Print Sheet
+      for (let i = 1; i <= 6; i++) {
+        const prevImg = document.getElementById(`prev-img-${i}`);
+        const prevPlace = document.getElementById(`prev-placeholder-${i}`);
+        if (photoData[i]) {
+          prevImg.src = photoData[i];
+          prevImg.classList.remove('hidden');
+          prevPlace.classList.add('hidden');
+        } else {
+          prevImg.classList.add('hidden');
+          prevPlace.classList.remove('hidden');
+        }
+      }
+
+      // Sync Signature to Print Sheet
+      if (sigCanvas) {
+        const sigImg = document.getElementById('prev_signature_img');
+        const sigPlace = document.getElementById('prev_sig_placeholder');
+        const dataUrl = sigCanvas.toDataURL();
+        if (isCanvasBlank(sigCanvas)) {
+          sigImg.classList.add('hidden');
+          sigPlace.classList.remove('hidden');
+        } else {
+          sigImg.src = dataUrl;
+          sigImg.classList.remove('hidden');
+          sigPlace.classList.add('hidden');
+        }
+      }
+    }
+
+    function isCanvasBlank(canvas) {
+      const context = canvas.getContext('2d');
+      const pixelBuffer = new Uint32Array(
+        context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+      );
+      return !pixelBuffer.some(color => color !== 0);
+    }
+
+    // SIGNATURE PAD HANDLER
+    function initSignaturePad() {
+      sigCanvas = document.getElementById('signature-pad');
+      if (!sigCanvas) return;
+      sigCtx = sigCanvas.getContext('2d');
+
+      // Adjust resolution for retina screens
+      const rect = sigCanvas.getBoundingClientRect();
+      sigCanvas.width = rect.width * 2;
+      sigCanvas.height = rect.height * 2;
+      sigCtx.scale(2, 2);
+      sigCtx.strokeStyle = '#0f2342';
+      sigCtx.lineWidth = 2.5;
+      sigCtx.lineCap = 'round';
+
+      function getPos(e) {
+        const r = sigCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: clientX - r.left, y: clientY - r.top };
+      }
+
+      function startDraw(e) {
+        isSigning = true;
+        const p = getPos(e);
+        sigCtx.beginPath();
+        sigCtx.moveTo(p.x, p.y);
+        e.preventDefault();
+      }
+
+      function moveDraw(e) {
+        if (!isSigning) return;
+        const p = getPos(e);
+        sigCtx.lineTo(p.x, p.y);
+        sigCtx.stroke();
+        e.preventDefault();
+      }
+
+      function stopDraw() {
+        if (isSigning) {
+          isSigning = false;
+          syncAllFields();
+        }
+      }
+
+      sigCanvas.addEventListener('mousedown', startDraw);
+      sigCanvas.addEventListener('mousemove', moveDraw);
+      sigCanvas.addEventListener('mouseup', stopDraw);
+      sigCanvas.addEventListener('mouseleave', stopDraw);
+
+      sigCanvas.addEventListener('touchstart', startDraw, { passive: false });
+      sigCanvas.addEventListener('touchmove', moveDraw, { passive: false });
+      sigCanvas.addEventListener('touchend', stopDraw);
+    }
+
+    function clearSignature() {
+      if (sigCtx && sigCanvas) {
+        sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+        syncAllFields();
+        showToast('Signature cleared');
+      }
+    }
+
+    // PHOTO HANDLING (SLOTS 1 to 6)
+    function triggerPhotoCapture(slot) {
+      const fileInput = document.getElementById(`file-input-${slot}`);
+      if (fileInput) fileInput.click();
+    }
+
+    function handlePhotoSelect(event, slot) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        // Compress photo to prevent localStorage overflow
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 1000;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedData = canvas.toDataURL('image/jpeg', 0.82);
+
+          photoData[slot] = compressedData;
+          updatePhotoSlotUI(slot);
+          syncAllFields();
+          saveDraftToStorage(false);
+          showToast(`Photo ${slot} saved`);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updatePhotoSlotUI(slot) {
+      const container = document.getElementById(`photo-preview-${slot}`);
+      if (!container) return;
+      if (photoData[slot]) {
+        container.innerHTML = `<img src="${photoData[slot]}" class="w-full h-full object-cover rounded-md" alt="Slot ${slot}">`;
+      } else {
+        container.innerHTML = `
+          <svg class="w-8 h-8 mb-1 stroke-current text-slate-400" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+          <span class="text-[10px] text-slate-500">No photo added</span>
+        `;
+      }
+    }
+
+    function clearPhoto(slot) {
+      photoData[slot] = null;
+      updatePhotoSlotUI(slot);
+      syncAllFields();
+      saveDraftToStorage(false);
+      showToast(`Photo ${slot} removed`);
+    }
+
+    // LOCAL STORAGE DRAFT SAVING & LOADING
+    function saveDraftToStorage(notify = true) {
+      try {
+        const draft = {
+          auditor_name: document.getElementById('auditor_name').value,
+          install_date: document.getElementById('install_date').value,
+          building_name: document.getElementById('building_name').value,
+          floor_level: document.getElementById('floor_level').value,
+          ap_hostname: document.getElementById('ap_hostname').value,
+          ap_mac: document.getElementById('ap_mac').value,
+          ap_serial: document.getElementById('ap_serial').value,
+          asset_tag: document.getElementById('asset_tag').value,
+          room_grid: document.getElementById('room_grid').value,
+          patch_port: document.getElementById('patch_port').value,
+          mount_tbar: document.getElementById('mount_tbar').checked,
+          mount_solid: document.getElementById('mount_solid').checked,
+          mount_wall: document.getElementById('mount_wall').checked,
+          mount_pole: document.getElementById('mount_pole').checked,
+          field_notes: document.getElementById('field_notes').value,
+          photoData: photoData
+        };
+        localStorage.setItem('tottenham_ap_audit_draft', JSON.stringify(draft));
+        if (notify) showToast('Draft saved to local storage');
+      } catch (err) {
+        console.warn('Storage quota warning:', err);
+        if (notify) showToast('Draft saved (photos memory full)');
+      }
+    }
+
+    function loadDraftFromStorage() {
+      try {
+        const data = localStorage.getItem('tottenham_ap_audit_draft');
+        if (!data) return;
+        const draft = JSON.parse(data);
+        if (draft.auditor_name) document.getElementById('auditor_name').value = draft.auditor_name;
+        if (draft.install_date) document.getElementById('install_date').value = draft.install_date;
+        if (draft.building_name) document.getElementById('building_name').value = draft.building_name;
+        if (draft.floor_level) document.getElementById('floor_level').value = draft.floor_level;
+        if (draft.ap_hostname) document.getElementById('ap_hostname').value = draft.ap_hostname;
+        if (draft.ap_mac) document.getElementById('ap_mac').value = draft.ap_mac;
+        if (draft.ap_serial) document.getElementById('ap_serial').value = draft.ap_serial;
+        if (draft.asset_tag) document.getElementById('asset_tag').value = draft.asset_tag;
+        if (draft.room_grid) document.getElementById('room_grid').value = draft.room_grid;
+        if (draft.patch_port) document.getElementById('patch_port').value = draft.patch_port;
+
+        document.getElementById('mount_tbar').checked = !!draft.mount_tbar;
+        document.getElementById('mount_solid').checked = !!draft.mount_solid;
+        document.getElementById('mount_wall').checked = !!draft.mount_wall;
+        document.getElementById('mount_pole').checked = !!draft.mount_pole;
+        if (draft.field_notes) document.getElementById('field_notes').value = draft.field_notes;
+
+        if (draft.photoData && Array.isArray(draft.photoData)) {
+          for (let i = 1; i <= 6; i++) {
+            if (draft.photoData[i]) {
+              photoData[i] = draft.photoData[i];
+              updatePhotoSlotUI(i);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Error loading draft:', err);
+      }
+    }
+
     function startNextAP() {
-      ['ap_hostname', 'ap_hostname_top', 'ap_serial', 'ap_mac', 'asset_tag', 'room_grid', 'patch_port', 'switch_port', 'field_notes'].forEach((id) => {
+      ['ap_hostname', 'ap_serial', 'ap_mac', 'asset_tag', 'room_grid', 'patch_port', 'field_notes'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
@@ -112,9 +973,242 @@
       showToast('Ready for next AP');
     }
 
+    // MULTI-PASS OCR ENGINE & CAMERA MODAL
+    function openOcrModal(targetFieldId) {
+      currentOcrTargetId = targetFieldId;
+      document.getElementById('ocr-modal').classList.remove('hidden');
+      document.getElementById('ocr-result-input').value = '';
+      document.getElementById('ocr-msg').textContent = 'Position sticker in viewfinder or upload a photo.';
+      document.getElementById('ocr-msg').className = 'text-[11px] text-slate-500 mt-1';
+      document.getElementById('ocr-status').classList.add('hidden');
+      startLiveCamera();
+    }
+
+    function closeOcrModal() {
+      stopLiveCamera();
+      document.getElementById('ocr-modal').classList.add('hidden');
+    }
+
+    function startLiveCamera() {
+      const video = document.getElementById('ocr-video');
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('Live camera not supported in this browser. Use Photo / File.', true);
+        return;
+      }
+      stopLiveCamera();
+      navigator.mediaDevices.getUserMedia({
+        video: { facingMode: currentCameraFacing, width: { ideal: 1280 }, height: { ideal: 720 } }
+      }).then((stream) => {
+        mediaStream = stream;
+        video.srcObject = stream;
+      }).catch((err) => {
+        console.warn('Camera stream error:', err);
+        showToast('Could not open camera stream. Use Photo / File button.', true);
+      });
+    }
+
+    function stopLiveCamera() {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+      }
+    }
+
+    function flipCamera() {
+      currentCameraFacing = (currentCameraFacing === 'environment') ? 'user' : 'environment';
+      startLiveCamera();
+    }
+
+    function captureLiveVideoFrame() {
+      const video = document.getElementById('ocr-video');
+      if (!video || !video.videoWidth) {
+        showToast('Live video feed unavailable', true);
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0);
+      runMultiPassOcr(canvas);
+    }
+
+    function triggerOcrFileUpload() {
+      document.getElementById('ocr-file-input').click();
+    }
+
+    function handleOcrFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          runMultiPassOcr(canvas);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // MULTI-PASS CONTRAST & ROI OCR PIPELINE
+    async function runMultiPassOcr(sourceCanvas) {
+      const statusDiv = document.getElementById('ocr-status');
+      const statusText = document.getElementById('ocr-status-text');
+      const msgText = document.getElementById('ocr-msg');
+      const inputEl = document.getElementById('ocr-result-input');
+
+      statusDiv.classList.remove('hidden');
+      statusText.textContent = 'Scanning image (Multi-pass ROI)...';
+      msgText.textContent = 'Analyzing image passes...';
+      inputEl.value = '';
+
+      try {
+        // Create 3 Region-Of-Interest (ROI) canvas variations
+        const candidates = [];
+
+        // Pass 1: Lower 60% of image (Where MAC lines usually sit on Cisco/Meraki stickers)
+        const cropLower = document.createElement('canvas');
+        cropLower.width = sourceCanvas.width;
+        cropLower.height = Math.round(sourceCanvas.height * 0.6);
+        const ctxL = cropLower.getContext('2d');
+        ctxL.drawImage(sourceCanvas, 0, Math.round(sourceCanvas.height * 0.4), cropLower.width, cropLower.height, 0, 0, cropLower.width, cropLower.height);
+        candidates.push(enhanceContrastCanvas(cropLower, 1.8));
+
+        // Pass 2: Full Frame with High Contrast + Binarization
+        candidates.push(enhanceContrastCanvas(sourceCanvas, 2.2));
+
+        // Pass 3: Center 60% Zoom Crop
+        const cropCenter = document.createElement('canvas');
+        cropCenter.width = Math.round(sourceCanvas.width * 0.7);
+        cropCenter.height = Math.round(sourceCanvas.height * 0.7);
+        const ctxC = cropCenter.getContext('2d');
+        ctxC.drawImage(sourceCanvas, Math.round(sourceCanvas.width * 0.15), Math.round(sourceCanvas.height * 0.15), cropCenter.width, cropCenter.height, 0, 0, cropCenter.width, cropCenter.height);
+        candidates.push(enhanceContrastCanvas(cropCenter, 1.5));
+
+        let extractedMac = null;
+
+        for (let i = 0; i < candidates.length; i++) {
+          statusText.textContent = `Scanning pass ${i + 1} of ${candidates.length}...`;
+          const result = await Tesseract.recognize(candidates[i], 'eng');
+          const text = result.data.text || '';
+          const found = parseMacFromOcrText(text);
+          if (found) {
+            extractedMac = found;
+            break;
+          }
+        }
+
+        statusDiv.classList.add('hidden');
+
+        if (extractedMac) {
+          inputEl.value = extractedMac;
+          msgText.textContent = '✨ Valid MAC address detected! Verify or edit above.';
+          msgText.className = 'text-[11px] text-emerald-600 font-bold mt-1';
+          showToast(`MAC Detected: ${extractedMac}`);
+        } else {
+          msgText.textContent = '⚠️ No MAC pattern detected. Zoom closer to the "MAC:" line or type/paste MAC above.';
+          msgText.className = 'text-[11px] text-amber-600 font-bold mt-1';
+        }
+      } catch (err) {
+        console.error('OCR Error:', err);
+        statusDiv.classList.add('hidden');
+        msgText.textContent = 'OCR process encountered an issue. Please type MAC address manually above.';
+        msgText.className = 'text-[11px] text-rose-600 font-medium mt-1';
+      }
+    }
+
+    // High Contrast Pre-Processing Filter
+    function enhanceContrastCanvas(srcCanvas, contrastMultiplier = 2.0) {
+      const outCanvas = document.createElement('canvas');
+      outCanvas.width = srcCanvas.width;
+      outCanvas.height = srcCanvas.height;
+      const ctx = outCanvas.getContext('2d');
+      ctx.drawImage(srcCanvas, 0, 0);
+
+      const imgData = ctx.getImageData(0, 0, outCanvas.width, outCanvas.height);
+      const data = imgData.data;
+      const factor = (259 * (contrastMultiplier * 100 + 255)) / (255 * (259 - contrastMultiplier * 100));
+
+      for (let i = 0; i < data.length; i += 4) {
+        // Convert to grayscale
+        const avg = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        let newVal = factor * (avg - 128) + 128;
+        newVal = Math.min(255, Math.max(0, newVal));
+        data[i] = newVal;
+        data[i + 1] = newVal;
+        data[i + 2] = newVal;
+      }
+      ctx.putImageData(imgData, 0, 0);
+      return outCanvas;
+    }
+
+    // MAC REGEX & OCR CHARACTER SANITIZER
+    function parseMacFromOcrText(rawText) {
+      const lines = rawText.split('\n');
+      for (let line of lines) {
+        const upper = line.toUpperCase();
+        // Ignore lines known to contain non-MAC headers
+        if (upper.includes('PID') || upper.includes('VID') || upper.includes('MODEL') || upper.includes('MADE IN') || upper.includes('PO ')) {
+          continue;
+        }
+
+        // Clean character confusions common in OCR
+        // Replace O/Q -> 0, I/l -> 1, S -> 5, B -> 8, G -> 6, Z -> 2 inside hex pairs
+        let cleaned = upper
+          .replace(/MAC/g, '')
+          .replace(/ADDR/g, '')
+          .replace(/[^A-Z0-9]/g, '');
+
+        if (cleaned.length >= 12) {
+          // Look for 12-character hex window
+          for (let start = 0; start <= cleaned.length - 12; start++) {
+            let candidate = cleaned.substring(start, start + 12);
+
+            // Apply character fixups
+            candidate = candidate
+              .replace(/O/g, '0').replace(/Q/g, '0')
+              .replace(/I/g, '1').replace(/L/g, '1')
+              .replace(/S/g, '5').replace(/Z/g, '2');
+
+            // Verify if candidate is valid 12-character hex string (0-9, A-F)
+            if (/^[0-9A-F]{12}$/.test(candidate)) {
+              return candidate.match(/.{1,2}/g).join(':');
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    function applyOcrResult() {
+      const val = document.getElementById('ocr-result-input').value.trim();
+      if (val && currentOcrTargetId) {
+        const targetEl = document.getElementById(currentOcrTargetId);
+        if (targetEl) {
+          targetEl.value = val;
+          syncAllFields();
+          saveDraftToStorage(false);
+          showToast(`Applied: ${val}`);
+        }
+      }
+      closeOcrModal();
+    }
+
+    // DIRECT PDF FILE GENERATION (BYPASSES PRINTER DIALOG COMPLETELY)
     function triggerPrintExport() {
       syncAllFields();
       saveDraftToStorage(false);
+
+      if (typeof html2pdf === 'undefined') {
+        showToast('PDF library is loading. Please check internet connection and try again.', true);
+        return;
+      }
 
       const element = document.getElementById('print-sheet');
       const hostname = document.getElementById('ap_hostname').value.trim() || 'AP';
@@ -129,40 +1223,26 @@
 
       if (wasHidden) {
         previewTab.classList.remove('hidden');
-        previewTab.style.position = 'absolute';
-        previewTab.style.left = '-9999px';
-        previewTab.style.top = '0';
-        previewTab.style.width = '210mm';
       }
 
       const opt = {
-        margin:       [3, 3, 3, 3],
+        margin:       [4, 4, 4, 4],
         filename:     filename,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        image:        { type: 'jpeg', quality: 0.95 },
+        html2canvas:  { scale: 1.5, useCORS: true, logging: false },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(element).save().then(() => {
-        if (wasHidden) {
-          previewTab.classList.add('hidden');
-          previewTab.style.position = '';
-          previewTab.style.left = '';
-          previewTab.style.top = '';
-          previewTab.style.width = '';
-        }
-        showToast('PDF File Downloaded!');
-      }).catch(err => {
-        console.error('PDF generation error:', err);
-        if (wasHidden) {
-          previewTab.classList.add('hidden');
-          previewTab.style.position = '';
-          previewTab.style.left = '';
-          previewTab.style.top = '';
-          previewTab.style.width = '';
-        }
-        window.print();
-      });
+      html2pdf().set(opt).from(element).save()
+        .then(() => {
+          if (wasHidden) previewTab.classList.add('hidden');
+          showToast('PDF File Downloaded!');
+        })
+        .catch((err) => {
+          console.error('PDF generation error:', err);
+          if (wasHidden) previewTab.classList.add('hidden');
+          showToast('Could not save PDF. Please retry.', true);
+        });
     }
   </script>
 </body>
