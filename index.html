@@ -606,8 +606,10 @@
       }
 
       initSignaturePad();
-      loadDraftFromStorage();
-      loadFromUrlParams();
+      const urlLoaded = loadFromUrlParams();
+      if (!urlLoaded) {
+        loadDraftFromStorage();
+      }
       syncAllFields();
     };
 
@@ -663,11 +665,11 @@
       const switchIdEl = document.getElementById('switch_id');
       if (switchIdEl) switchIdEl.value = switchIdEl.value.toUpperCase();
 
-      const hostname = (apHostnameEl ? apHostnameEl.value.trim() : '') || 'ST-AP-0504-002';
-      document.getElementById('prev_hostname_badge').textContent = hostname.toUpperCase();
+      const hostname = apHostnameEl ? apHostnameEl.value.trim() : '';
+      document.getElementById('prev_hostname_badge').textContent = hostname ? hostname.toUpperCase() : '—';
 
-      const auditor = document.getElementById('auditor_name').value.trim() || 'Gareth Beth';
-      document.getElementById('prev_auditor').textContent = auditor;
+      const auditor = document.getElementById('auditor_name').value.trim();
+      document.getElementById('prev_auditor').textContent = auditor || '—';
 
       const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
       document.getElementById('prev_date_stamp').textContent = `Date: ${dateVal}`;
@@ -675,17 +677,17 @@
       const building = document.getElementById('building_name').value.trim() || 'Tottenham Stadium';
       document.getElementById('prev_building').textContent = building;
 
-      const floor = document.getElementById('floor_level').value.trim() || 'L5 - SCR04';
-      document.getElementById('prev_floor').textContent = floor;
+      const floor = document.getElementById('floor_level').value.trim();
+      document.getElementById('prev_floor').textContent = floor || '—';
 
-      const room = (roomGridEl ? roomGridEl.value.trim() : '') || 'F&B BAR';
-      document.getElementById('prev_room').textContent = room.toUpperCase();
+      const room = roomGridEl ? roomGridEl.value.trim() : '';
+      document.getElementById('prev_room').textContent = room ? room.toUpperCase() : '—';
 
-      const portId = (portIdEl ? portIdEl.value.trim() : '') || 'SCR/05/04/A1/U30/187';
-      document.getElementById('prev_port_id').textContent = portId.toUpperCase();
+      const portId = portIdEl ? portIdEl.value.trim() : '';
+      document.getElementById('prev_port_id').textContent = portId ? portId.toUpperCase() : '—';
 
-      const switchVal = (switchIdEl ? switchIdEl.value.trim() : '') || 'SW-ACC-01-01-01';
-      document.getElementById('prev_switch').textContent = switchVal.toUpperCase();
+      const switchVal = switchIdEl ? switchIdEl.value.trim() : '';
+      document.getElementById('prev_switch').textContent = switchVal ? switchVal.toUpperCase() : '—';
 
       document.getElementById('prev_mount').textContent = getSelectedMountType();
 
@@ -962,33 +964,35 @@
         if (!b64 && window.location.hash.startsWith('#audit=')) {
           b64 = window.location.hash.substring(7);
         }
-        if (!b64) return;
+        if (!b64) return false;
 
         const payloadStr = decodeURIComponent(atob(b64));
         const draft = JSON.parse(payloadStr);
 
-        if (draft.auditor_name) document.getElementById('auditor_name').value = draft.auditor_name;
-        if (draft.install_date) document.getElementById('install_date').value = draft.install_date;
-        if (draft.building_name) document.getElementById('building_name').value = draft.building_name;
-        if (draft.floor_level) document.getElementById('floor_level').value = draft.floor_level;
-        if (draft.ap_hostname) document.getElementById('ap_hostname').value = draft.ap_hostname.toUpperCase();
-        if (draft.port_id) document.getElementById('port_id').value = draft.port_id.toUpperCase();
-        if (draft.room_grid) document.getElementById('room_grid').value = draft.room_grid.toUpperCase();
-        if (draft.switch_id) document.getElementById('switch_id').value = draft.switch_id.toUpperCase();
+        document.getElementById('auditor_name').value = draft.auditor_name || '';
+        document.getElementById('install_date').value = draft.install_date || '';
+        document.getElementById('building_name').value = draft.building_name || 'Tottenham Stadium';
+        document.getElementById('floor_level').value = draft.floor_level || '';
+        document.getElementById('ap_hostname').value = (draft.ap_hostname || '').toUpperCase();
+        document.getElementById('port_id').value = (draft.port_id || '').toUpperCase();
+        document.getElementById('room_grid').value = (draft.room_grid || '').toUpperCase();
+        document.getElementById('switch_id').value = (draft.switch_id || '').toUpperCase();
         if (draft.audit_status) document.getElementById('audit_status').value = draft.audit_status;
 
         if (draft.mount_type) {
           const radios = document.getElementsByName('mount_type');
           for (const radio of radios) {
-            if (radio.value === draft.mount_type) radio.checked = true;
+            radio.checked = (radio.value === draft.mount_type);
           }
         }
 
-        if (draft.field_notes) document.getElementById('field_notes').value = draft.field_notes;
+        document.getElementById('field_notes').value = draft.field_notes || '';
 
         showToast(`Loaded AP Audit link for ${draft.ap_hostname || 'AP'}`);
+        return true;
       } catch (err) {
         console.warn('Could not parse URL audit params:', err);
+        return false;
       }
     }
 
