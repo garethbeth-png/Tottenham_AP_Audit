@@ -110,7 +110,7 @@
           <span>Save PDF</span>
         </button>
       </div>
-    </div>
+
 
     <!-- Navigation Tabs -->
     <div class="max-w-5xl mx-auto px-4 flex border-t border-slate-700/60 text-sm font-medium">
@@ -885,10 +885,46 @@
       }
     }
 
-    // GENERATE & SHARE A DIRECT DEEP-LINK CONTAINING ALL AUDIT METADATA
-    function shareFormLink() {
+    // COMPRESS PHOTOS FOR COMPACT LINK SHARING (< 30KB TOTAL URL PAYLOAD)
+    async function compressPhotoForShare(dataUrl) {
+      if (!dataUrl) return null;
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 260; // Optimized thumbnail size for fast URL transfer & sharp PDF rendering
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.42));
+        };
+        img.onerror = () => resolve(null);
+        img.src = dataUrl;
+      });
+    }
+
+    // GENERATE & SHARE A DIRECT DEEP-LINK CONTAINING METADATA AND COMPRESSED PHOTOS
+    async function shareFormLink() {
       syncAllFields();
       saveDraftToStorage(false);
+
+      showToast('Preparing shareable link with photos...');
+
+      const compressedPhotos = [null];
+      for (let i = 1; i <= 6; i++) {
+        if (photoData[i]) {
+          const thumb = await compressPhotoForShare(photoData[i]);
+          compressedPhotos[i] = thumb;
+        } else {
+          compressedPhotos[i] = null;
+        }
+      }
 
       const draft = {
         auditor_name: document.getElementById('auditor_name').value,
@@ -901,7 +937,8 @@
         switch_id: document.getElementById('switch_id').value.toUpperCase(),
         mount_type: getSelectedMountType(),
         audit_status: document.getElementById('audit_status').value,
-        field_notes: document.getElementById('field_notes').value
+        field_notes: document.getElementById('field_notes').value,
+        photos: compressedPhotos
       };
 
       try {
@@ -918,12 +955,12 @@
             text: `AP Installation Audit Form data for ${apName}`,
             url: shareUrl
           }).then(() => {
-            showToast('Form link shared!');
+            showToast('Form & photos link shared!');
           }).catch(() => {
-            copyTextToClipboard(shareUrl, `Link copied for ${apName}!`);
+            copyTextToClipboard(shareUrl, `Link with photos copied for ${apName}!`);
           });
         } else {
-          copyTextToClipboard(shareUrl, `Link copied for ${apName}!`);
+          copyTextToClipboard(shareUrl, `Link with photos copied for ${apName}!`);
         }
       } catch (err) {
         console.error('Error generating link:', err);
@@ -988,7 +1025,26 @@
 
         document.getElementById('field_notes').value = draft.field_notes || '';
 
+        // Hydrate Photos Transferred via URL Payload
+        if (draft.photos && Array.isArray(draft.photos)) {
+          for (let i = 1; i <= 6; i++) {
+            if (draft.photos[i]) {
+              photoData[i] = draft.photos[i];
+              updatePhotoSlotUI(i);
+            }
+          }
+        }
+
         showToast(`Loaded AP Audit link for ${draft.ap_hostname || 'AP'}`);
+        return true;
+      } catch (err) {
+        console.warn('Could not parse URL audit params:', err);
+        return false;
+      }
+    }
+
+    function loadDraftFromStorage() {
+
         return true;
       } catch (err) {
         console.warn('Could not parse URL audit params:', err);
