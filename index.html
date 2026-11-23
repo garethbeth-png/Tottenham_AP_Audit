@@ -13,6 +13,7 @@
   <meta name="apple-mobile-web-app-title" content="AP Audit Index 12">
 
   <!-- External CDN Libraries: Tailwind CSS, Tesseract.js, html2pdf.js -->
+  <!-- External CDN Libraries: Tailwind CSS, html2pdf.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -31,7 +32,6 @@
       }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <!-- Typography -->
@@ -170,21 +170,10 @@
             <input type="text" id="ap_hostname" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. ST-AP-0504-002" class="w-full px-3 py-2 text-sm font-semibold uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
 
-          <!-- Port ID Field + Camera OCR Scan Trigger -->
+          <!-- Port ID Field -->
           <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="block text-xs font-semibold text-slate-600">Port ID *</label>
-              <button type="button" onclick="openOcrModal('port_id')" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center space-x-1">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><circle cx="12" cy="13" r="3"></circle></svg>
-                <span>OCR Scan</span>
-              </button>
-            </div>
-            <div class="relative">
-              <input type="text" id="port_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. SCR/05/04/A1/U30/187" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase font-bold">
-              <button type="button" onclick="openOcrModal('port_id')" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-blue-600">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-              </button>
-            </div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Port ID *</label>
+            <input type="text" id="port_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. SCR/05/04/A1/U30/187" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase font-bold">
           </div>
 
           <div>
@@ -524,77 +513,12 @@
 
   </main>
 
-  <!-- CAMERA & MULTI-PASS OCR MODAL -->
-  <div id="ocr-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[90vh]">
-
-      <div class="bg-navy-900 text-white px-4 py-3 flex items-center justify-between">
-        <h3 class="text-sm font-bold flex items-center space-x-2">
-          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-          <span>Scan Code / Identifier</span>
-        </h3>
-        <button type="button" onclick="closeOcrModal()" class="text-slate-400 hover:text-white text-lg font-bold p-1">&times;</button>
-      </div>
-
-      <div class="p-4 overflow-y-auto space-y-3 flex-1">
-        <!-- Video Viewfinder -->
-        <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-700">
-          <video id="ocr-video" autoplay playsinline class="w-full h-full object-cover"></video>
-
-          <div class="absolute inset-4 border-2 border-dashed border-blue-400/70 rounded-lg pointer-events-none flex items-center justify-center">
-            <span class="bg-navy-900/80 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur">Center Code Label Here</span>
-          </div>
-        </div>
-
-        <!-- Controls -->
-        <div class="grid grid-cols-3 gap-2">
-          <button type="button" onclick="captureLiveVideoFrame()" class="py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow transition">
-            Snap Frame
-          </button>
-          <button type="button" onclick="flipCamera()" class="py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
-            Flip Camera
-          </button>
-          <button type="button" onclick="triggerOcrFileUpload()" class="py-2 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
-            Photo / File
-          </button>
-          <input type="file" id="ocr-file-input" accept="image/*" class="hidden" onchange="handleOcrFileSelect(event)">
-        </div>
-
-        <!-- Status Box -->
-        <div id="ocr-status" class="hidden p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 font-medium flex items-center space-x-2">
-          <svg class="w-4 h-4 animate-spin text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-          <span id="ocr-status-text">Processing image passes...</span>
-        </div>
-
-        <!-- Result Edit Box -->
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Detected / Editable Value</label>
-          <input type="text" id="ocr-result-input" oninput="this.value = this.value.toUpperCase();" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 uppercase font-bold text-navy-900 bg-slate-50" placeholder="Scanned value will appear here">
-          <p id="ocr-msg" class="text-[11px] text-slate-500 mt-1">Text detected. Verify or adjust extracted string above.</p>
-        </div>
-      </div>
-
-      <div class="px-4 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-end space-x-2">
-        <button type="button" onclick="closeOcrModal()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800">
-          Cancel
-        </button>
-        <button type="button" onclick="applyOcrResult()" class="px-5 py-2 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow">
-          Use Value
-        </button>
-      </div>
-
-    </div>
-  </div>
-
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
   <!-- APPLICATION LOGIC JAVASCRIPT -->
   <script>
     const photoData = [null, null, null, null, null, null, null];
-    let currentCameraFacing = 'environment';
-    let mediaStream = null;
-    let currentOcrTargetId = 'port_id';
 
     let sigCanvas, sigCtx;
     let isSigning = false;
@@ -1145,198 +1069,6 @@
       saveDraftToStorage(false);
       switchTab('form');
       showToast('Ready for next AP');
-    }
-
-    // MULTI-PASS OCR ENGINE FOR LOW-LIGHT STICKERS
-    function openOcrModal(targetFieldId) {
-      currentOcrTargetId = targetFieldId;
-      document.getElementById('ocr-modal').classList.remove('hidden');
-      document.getElementById('ocr-result-input').value = '';
-      document.getElementById('ocr-msg').textContent = 'Position label in viewfinder or upload a photo.';
-      document.getElementById('ocr-msg').className = 'text-[11px] text-slate-500 mt-1';
-      document.getElementById('ocr-status').classList.add('hidden');
-      startLiveCamera();
-    }
-
-    function closeOcrModal() {
-      stopLiveCamera();
-      document.getElementById('ocr-modal').classList.add('hidden');
-    }
-
-    function startLiveCamera() {
-      const video = document.getElementById('ocr-video');
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        showToast('Live camera unavailable. Use Photo / File button.', true);
-        return;
-      }
-      stopLiveCamera();
-      navigator.mediaDevices.getUserMedia({
-        video: { facingMode: currentCameraFacing, width: { ideal: 1280 }, height: { ideal: 720 } }
-      }).then((stream) => {
-        mediaStream = stream;
-        video.srcObject = stream;
-      }).catch((err) => {
-        console.warn('Camera error:', err);
-        showToast('Camera feed unavailable. Use Photo / File button.', true);
-      });
-    }
-
-    function stopLiveCamera() {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
-        mediaStream = null;
-      }
-    }
-
-    function flipCamera() {
-      currentCameraFacing = (currentCameraFacing === 'environment') ? 'user' : 'environment';
-      startLiveCamera();
-    }
-
-    function captureLiveVideoFrame() {
-      const video = document.getElementById('ocr-video');
-      if (!video || !video.videoWidth) {
-        showToast('Live video feed unavailable', true);
-        return;
-      }
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0);
-      runMultiPassOcr(canvas);
-    }
-
-    function triggerOcrFileUpload() {
-      document.getElementById('ocr-file-input').click();
-    }
-
-    function handleOcrFileSelect(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0);
-          runMultiPassOcr(canvas);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    async function runMultiPassOcr(sourceCanvas) {
-      const statusDiv = document.getElementById('ocr-status');
-      const statusText = document.getElementById('ocr-status-text');
-      const msgText = document.getElementById('ocr-msg');
-      const inputEl = document.getElementById('ocr-result-input');
-
-      statusDiv.classList.remove('hidden');
-      statusText.textContent = 'Scanning image (Multi-pass ROI)...';
-      msgText.textContent = 'Analyzing contrast passes...';
-      inputEl.value = '';
-
-      try {
-        const candidates = [];
-
-        // Pass 1: Lower 60% ROI crop
-        const cropLower = document.createElement('canvas');
-        cropLower.width = sourceCanvas.width;
-        cropLower.height = Math.round(sourceCanvas.height * 0.6);
-        const ctxL = cropLower.getContext('2d');
-        ctxL.drawImage(sourceCanvas, 0, Math.round(sourceCanvas.height * 0.4), cropLower.width, cropLower.height, 0, 0, cropLower.width, cropLower.height);
-        candidates.push(enhanceContrastCanvas(cropLower, 1.8));
-
-        // Pass 2: Full frame contrast boost
-        candidates.push(enhanceContrastCanvas(sourceCanvas, 2.2));
-
-        let detectedValue = null;
-
-        for (let i = 0; i < candidates.length; i++) {
-          statusText.textContent = `Scanning pass ${i + 1} of ${candidates.length}...`;
-          const result = await Tesseract.recognize(candidates[i], 'eng');
-          const text = result.data.text || '';
-          const cleaned = filterCleanedOcrText(text);
-          if (cleaned) {
-            detectedValue = cleaned.toUpperCase();
-            break;
-          }
-        }
-
-        statusDiv.classList.add('hidden');
-
-        if (detectedValue) {
-          inputEl.value = detectedValue.toUpperCase();
-          msgText.textContent = '✨ Value extracted! Verify or edit above.';
-          msgText.className = 'text-[11px] text-emerald-600 font-bold mt-1';
-          showToast(`Extracted: ${detectedValue.toUpperCase()}`);
-        } else {
-          msgText.textContent = '⚠️ Could not read code automatically. Type value above or zoom closer.';
-          msgText.className = 'text-[11px] text-amber-600 font-bold mt-1';
-        }
-      } catch (err) {
-        console.error('OCR Error:', err);
-        statusDiv.classList.add('hidden');
-        msgText.textContent = 'OCR process encountered an issue. Type value manually above.';
-        msgText.className = 'text-[11px] text-rose-600 font-medium mt-1';
-      }
-    }
-
-    function enhanceContrastCanvas(srcCanvas, contrastMultiplier = 2.0) {
-      const outCanvas = document.createElement('canvas');
-      outCanvas.width = srcCanvas.width;
-      outCanvas.height = srcCanvas.height;
-      const ctx = outCanvas.getContext('2d');
-      ctx.drawImage(srcCanvas, 0, 0);
-
-      const imgData = ctx.getImageData(0, 0, outCanvas.width, outCanvas.height);
-      const data = imgData.data;
-      const factor = (259 * (contrastMultiplier * 100 + 255)) / (255 * (259 - contrastMultiplier * 100));
-
-      for (let i = 0; i < data.length; i += 4) {
-        const avg = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-        let newVal = factor * (avg - 128) + 128;
-        newVal = Math.min(255, Math.max(0, newVal));
-        data[i] = newVal;
-        data[i + 1] = newVal;
-        data[i + 2] = newVal;
-      }
-      ctx.putImageData(imgData, 0, 0);
-      return outCanvas;
-    }
-
-    function filterCleanedOcrText(rawText) {
-      const lines = rawText.split('\n');
-      for (let line of lines) {
-        const upper = line.toUpperCase().trim();
-        if (upper.includes('PID') || upper.includes('VID') || upper.includes('MADE IN') || upper.includes('PO ')) {
-          continue;
-        }
-        const alphanumeric = upper.replace(/[^A-Z0-9\/-]/g, '');
-        if (alphanumeric.length >= 6) {
-          return alphanumeric;
-        }
-      }
-      return null;
-    }
-
-    function applyOcrResult() {
-      const val = document.getElementById('ocr-result-input').value.trim().toUpperCase();
-      if (val && currentOcrTargetId) {
-        const targetEl = document.getElementById(currentOcrTargetId);
-        if (targetEl) {
-          targetEl.value = val;
-          syncAllFields();
-          saveDraftToStorage(false);
-          showToast(`Applied: ${val}`);
-        }
-      }
-      closeOcrModal();
     }
 
     // DIRECT CLIENT-SIDE PDF EXPORT (html2pdf.js, scale: 3, NEVER window.print())
