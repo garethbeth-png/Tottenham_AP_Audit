@@ -885,14 +885,14 @@
       }
     }
 
-    // COMPRESS PHOTOS FOR COMPACT LINK SHARING (< 30KB TOTAL URL PAYLOAD)
+    // COMPRESS PHOTOS AGGRESSIVELY FOR STREAMLINED URL PAYLOADS (< 15KB TOTAL)
     async function compressPhotoForShare(dataUrl) {
       if (!dataUrl) return null;
       return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const maxDim = 260; // Optimized thumbnail size for fast URL transfer & sharp PDF rendering
+          const maxDim = 180; // Optimized thumbnail resolution for high-compression URL payloads
           let w = img.width, h = img.height;
           if (w > maxDim || h > maxDim) {
             if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
@@ -902,11 +902,53 @@
           canvas.height = h;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', 0.42));
+          resolve(canvas.toDataURL('image/jpeg', 0.35));
         };
         img.onerror = () => resolve(null);
         img.src = dataUrl;
       });
+    }
+
+    // NATIVE BROWSER DEFLATE STREAM COMPRESSION / DECOMPRESSION
+    async function compressTextStream(text) {
+      if (typeof CompressionStream !== 'undefined') {
+        try {
+          const stream = new Blob([text]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+          const buffer = await new Response(stream).arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+          let binary = '';
+          for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i]);
+          }
+          return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        } catch (e) {
+          console.warn('Stream compression fallback:', e);
+        }
+      }
+      return encodeURIComponent(btoa(encodeURIComponent(text)));
+    }
+
+    async function decompressTextStream(encodedStr) {
+      if (typeof DecompressionStream !== 'undefined') {
+        try {
+          let base64 = encodedStr.replace(/-/g, '+').replace(/_/g, '/');
+          while (base64.length % 4) base64 += '=';
+          const binaryStr = atob(base64);
+          const bytes = new Uint8Array(binaryStr.length);
+          for (let i = 0; i < binaryStr.length; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+          }
+          const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+          return await new Response(stream).text();
+        } catch (e) {
+          console.warn('Stream decompression fallback:', e);
+        }
+      }
+      try {
+        return decodeURIComponent(atob(decodeURIComponent(encodedStr)));
+      } catch (e) {
+        return atob(decodeURIComponent(encodedStr));
+      }
     }
 
     // GENERATE & SHARE A DIRECT DEEP-LINK CONTAINING METADATA AND COMPRESSED PHOTOS
@@ -914,13 +956,15 @@
       syncAllFields();
       saveDraftToStorage(false);
 
-      showToast('Preparing shareable link with photos...');
+      showToast('Compressing audit details & photos...');
 
       const compressedPhotos = [null];
+      let photoCount = 0;
       for (let i = 1; i <= 6; i++) {
         if (photoData[i]) {
           const thumb = await compressPhotoForShare(photoData[i]);
           compressedPhotos[i] = thumb;
+          if (thumb) photoCount++;
         } else {
           compressedPhotos[i] = null;
         }
@@ -942,25 +986,25 @@
       };
 
       try {
-        const payloadStr = encodeURIComponent(JSON.stringify(draft));
-        const b64 = btoa(payloadStr);
+        const jsonStr = JSON.stringify(draft);
+        const compressedB64 = await compressTextStream(jsonStr);
         const baseUrl = window.location.origin + window.location.pathname;
-        const shareUrl = `${baseUrl}?audit=${encodeURIComponent(b64)}`;
+        const shareUrl = `${baseUrl}?audit=${compressedB64}`;
 
         const apName = draft.ap_hostname || 'AP Audit';
 
         if (navigator.share) {
           navigator.share({
             title: `Tottenham AP Audit - ${apName}`,
-            text: `AP Installation Audit Form data for ${apName}`,
+            text: `AP Installation Audit Form for ${apName} (${photoCount} photos attached)`,
             url: shareUrl
           }).then(() => {
             showToast('Form & photos link shared!');
           }).catch(() => {
-            copyTextToClipboard(shareUrl, `Link with photos copied for ${apName}!`);
+            copyTextToClipboard(shareUrl, `Link with ${photoCount} photos copied for ${apName}!`);
           });
         } else {
-          copyTextToClipboard(shareUrl, `Link with photos copied for ${apName}!`);
+          copyTextToClipboard(shareUrl, `Link with ${photoCount} photos copied for ${apName}!`);
         }
       } catch (err) {
         console.error('Error generating link:', err);
@@ -994,7 +1038,7 @@
       document.body.removeChild(textarea);
     }
 
-    function loadFromUrlParams() {
+    async function loadFromUrlParams() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         let b64 = urlParams.get('audit');
@@ -1003,8 +1047,8 @@
         }
         if (!b64) return false;
 
-        const payloadStr = decodeURIComponent(atob(b64));
-        const draft = JSON.parse(payloadStr);
+        const decompressedJson = await decompressTextStream(b64);
+        const draft = JSON.parse(decompressedJson);
 
         document.getElementById('auditor_name').value = draft.auditor_name || '';
         document.getElementById('install_date').value = draft.install_date || '';
@@ -1025,26 +1069,23 @@
 
         document.getElementById('field_notes').value = draft.field_notes || '';
 
-        // Hydrate Photos Transferred via URL Payload
+        // Hydrate Photos Transferred via Compressed URL Payload
+        let loadedPhotosCount = 0;
         if (draft.photos && Array.isArray(draft.photos)) {
           for (let i = 1; i <= 6; i++) {
             if (draft.photos[i]) {
               photoData[i] = draft.photos[i];
               updatePhotoSlotUI(i);
+              loadedPhotosCount++;
+            } else {
+              photoData[i] = null;
+              updatePhotoSlotUI(i);
             }
           }
         }
 
-        showToast(`Loaded AP Audit link for ${draft.ap_hostname || 'AP'}`);
-        return true;
-      } catch (err) {
-        console.warn('Could not parse URL audit params:', err);
-        return false;
-      }
-    }
-
-    function loadDraftFromStorage() {
-
+        syncAllFields();
+        showToast(`Loaded AP Audit link for ${draft.ap_hostname || 'AP'} (${loadedPhotosCount} photos attached)`);
         return true;
       } catch (err) {
         console.warn('Could not parse URL audit params:', err);
