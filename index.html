@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tottenham Wi-Fi Upgrade - AP Installation Audit</title>
+  <title>Tottenham Wi-Fi Upgrade - AP Installation Audit (Index 10)</title>
 
   <!-- PWA Meta Tags -->
-  <meta name="theme-color" content="#0f2342">
+  <meta name="theme-color" content="#0f172a">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="AP Audit">
+  <meta name="apple-mobile-web-app-title" content="AP Audit Index 10">
 
-  <!-- External Libraries: Tailwind CSS, Tesseract.js, html2pdf.js -->
+  <!-- External CDN Libraries: Tailwind CSS, Tesseract.js, html2pdf.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -23,8 +23,8 @@
           },
           colors: {
             navy: {
-              800: '#16325c',
-              900: '#0f2342',
+              800: '#1e293b',
+              900: '#0f172a',
             }
           }
         }
@@ -40,9 +40,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* Fixed Dimensions for A4 Single-Page Fit & Sharp Export */
+    /* Strict A4 Page Dimensions for Zero-Clipping PDF Export */
     #print-sheet {
-      width: 100%;
+      width: 195mm;
       max-width: 195mm;
       box-sizing: border-box;
       margin: 0 auto;
@@ -64,11 +64,11 @@
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
-        padding: 2mm !important;
+        padding: 0 !important;
       }
       @page {
         size: A4 portrait;
-        margin: 3mm;
+        margin: 5mm 7mm;
       }
     }
 
@@ -79,7 +79,7 @@
 </head>
 <body class="h-full font-sans antialiased text-slate-800 bg-slate-100 flex flex-col min-h-screen selection:bg-blue-500 selection:text-white">
 
-  <!-- Application Header -->
+  <!-- Header Section -->
   <header class="bg-navy-900 text-white shadow-md sticky top-0 z-30 no-print">
     <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-3">
@@ -91,13 +91,13 @@
         </div>
         <div>
           <h1 class="text-base font-bold tracking-tight text-white leading-tight">Tottenham Wi-Fi Upgrade</h1>
-          <p class="text-xs text-blue-200">AP Installation Audit Sheet</p>
+          <p class="text-xs text-blue-200">AP Installation Audit Sheet (Index 10)</p>
         </div>
       </div>
 
-      <!-- Header Buttons -->
+      <!-- Action Buttons -->
       <div class="flex items-center space-x-2">
-        <button type="button" onclick="saveDraftToStorage(true)" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-navy-800 hover:bg-slate-700 text-blue-200 border border-slate-600 transition flex items-center space-x-1">
+        <button type="button" onclick="saveDraftToStorage(true)" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-slate-800 hover:bg-slate-700 text-blue-200 border border-slate-600 transition flex items-center space-x-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 022 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
           <span class="hidden sm:inline">Save Draft</span>
         </button>
@@ -116,7 +116,7 @@
       </button>
       <button type="button" id="tab-btn-preview" onclick="switchTab('preview')" class="py-2.5 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-        <span>2. 1-Page PDF Sheet</span>
+        <span>2. 1-Page A4 Preview</span>
       </button>
     </div>
   </header>
@@ -127,7 +127,7 @@
     <!-- TAB 1: AUDIT FORM -->
     <div id="tab-content-form" class="space-y-6">
 
-      <!-- Section 1: Header Information -->
+      <!-- Section 1: Site & Auditor Metadata -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
         <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
           <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">1</span>
@@ -136,7 +136,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Auditor Name</label>
-            <input type="text" id="auditor_name" oninput="syncAllFields()" placeholder="e.g. John Doe" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="auditor_name" oninput="syncAllFields()" placeholder="e.g. Gareth Beth" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Installation Date</label>
@@ -148,35 +148,35 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Floor Level</label>
-            <input type="text" id="floor_level" oninput="syncAllFields()" placeholder="e.g. Level 2 Concourse" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="floor_level" oninput="syncAllFields()" placeholder="e.g. L5 - SCR04" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
         </div>
       </div>
 
-      <!-- Section 2: AP & Infrastructure Details -->
+      <!-- Section 2: Access Point & Patching Details -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
         <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
           <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">2</span>
-          <span>Access Point & Infrastructure Details</span>
+          <span>Access Point & Patching Details</span>
         </h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">AP Hostname *</label>
-            <input type="text" id="ap_hostname" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. TOT-AP-L2-014" class="w-full px-3 py-2 text-sm font-semibold uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="ap_hostname" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. ST-AP-0504-002" class="w-full px-3 py-2 text-sm font-semibold uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
 
-          <!-- Port ID Field + Scan Button -->
+          <!-- Port ID Field + Camera OCR Scan Trigger -->
           <div>
             <div class="flex items-center justify-between mb-1">
               <label class="block text-xs font-semibold text-slate-600">Port ID *</label>
               <button type="button" onclick="openOcrModal('port_id')" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center space-x-1">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><circle cx="12" cy="13" r="3"></circle></svg>
-                <span>Scan Code</span>
+                <span>OCR Scan</span>
               </button>
             </div>
             <div class="relative">
-              <input type="text" id="port_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. PORT-01 or Gi1/0/24" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase font-bold">
+              <input type="text" id="port_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. SCR/05/04/A1/U30/187" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase font-bold">
               <button type="button" onclick="openOcrModal('port_id')" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-blue-600">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               </button>
@@ -185,52 +185,70 @@
 
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Room / Grid / Location Ref</label>
-            <input type="text" id="room_grid" oninput="syncAllFields()" placeholder="e.g. Room 204 / Grid B4" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="room_grid" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. F&amp;B BAR" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Switch ID</label>
-            <input type="text" id="switch_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. SW-L5-1882-01" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-          </div>
-        </div>
-
-        <!-- Mounting Options Checkboxes -->
-        <div class="pt-2 border-t border-slate-100">
-          <label class="block text-xs font-semibold text-slate-600 mb-2">Mounting Type Verified</label>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
-              <input type="checkbox" id="mount_tbar" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
-              <span>Ceiling T-Bar Grid</span>
-            </label>
-            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
-              <input type="checkbox" id="mount_solid" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
-              <span>Solid Ceiling / Concrete</span>
-            </label>
-            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
-              <input type="checkbox" id="mount_wall" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
-              <span>Wall Bracket</span>
-            </label>
-            <label class="flex items-center space-x-2 text-xs text-slate-700 font-medium cursor-pointer">
-              <input type="checkbox" id="mount_pole" onchange="syncAllFields()" class="rounded text-blue-600 focus:ring-blue-500 w-4 h-4">
-              <span>Pole / Truss Mount</span>
-            </label>
+            <input type="text" id="switch_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. SW-ACC-01-01-01" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
         </div>
       </div>
 
-      <!-- Section 3: 6 Photo Audit Cards -->
+      <!-- Section 3: Mounting & Audit Status -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
+        <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
+          <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">3</span>
+          <span>Mounting & Audit Status</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-2">Mounting Type *</label>
+            <div class="grid grid-cols-2 gap-2.5">
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs font-medium text-slate-700">
+                <input type="radio" name="mount_type" value="Ceiling T-Bar Grid" onchange="syncAllFields()" class="text-blue-600 focus:ring-blue-500">
+                <span>Ceiling T-Bar Grid</span>
+              </label>
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs font-medium text-slate-700">
+                <input type="radio" name="mount_type" value="Solid Ceiling / Concrete" onchange="syncAllFields()" class="text-blue-600 focus:ring-blue-500">
+                <span>Solid Ceiling / Concrete</span>
+              </label>
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs font-medium text-slate-700">
+                <input type="radio" name="mount_type" value="Wall Bracket" onchange="syncAllFields()" class="text-blue-600 focus:ring-blue-500">
+                <span>Wall Bracket</span>
+              </label>
+              <label class="flex items-center space-x-2 p-2 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer text-xs font-medium text-slate-700">
+                <input type="radio" name="mount_type" value="Pole/Truss" checked onchange="syncAllFields()" class="text-blue-600 focus:ring-blue-500">
+                <span>Pole / Truss</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-2">Audit Status *</label>
+            <select id="audit_status" onchange="syncAllFields()" class="w-full px-3 py-2.5 text-sm font-semibold border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+              <option value="COMPLETED &amp; VERIFIED" class="text-emerald-700 font-bold">COMPLETED &amp; VERIFIED</option>
+              <option value="PENDING PATCHING" class="text-amber-700 font-bold">PENDING PATCHING</option>
+              <option value="SNAG / REWORK REQUIRED" class="text-rose-700 font-bold">SNAG / REWORK REQUIRED</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Photographic Verification Records (6 Slots) -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
         <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center justify-between">
           <div class="flex items-center space-x-2">
-            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">3</span>
-            <span>Photographic Evidence (6 Field Photos)</span>
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">4</span>
+            <span>Photographic Evidence (6 Field Slots)</span>
           </div>
           <span class="text-xs text-slate-500 font-normal">Tap slot to capture or upload</span>
         </h2>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-          <!-- Photo Slot 1 -->
+          <!-- Slot 1 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">1. AP Serial / MAC Label</span>
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">1. MAC / Label</span>
             <div id="photo-preview-1" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
               <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
@@ -242,9 +260,9 @@
             <input type="file" id="file-input-1" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 1)">
           </div>
 
-          <!-- Photo Slot 2 -->
+          <!-- Slot 2 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">2. Mounted AP View</span>
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">2. Mounted AP</span>
             <div id="photo-preview-2" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
               <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
@@ -256,9 +274,9 @@
             <input type="file" id="file-input-2" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 2)">
           </div>
 
-          <!-- Photo Slot 3 -->
+          <!-- Slot 3 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">3. Patch Panel Outlet</span>
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">3. Patch Outlet</span>
             <div id="photo-preview-3" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
               <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
@@ -270,9 +288,9 @@
             <input type="file" id="file-input-3" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 3)">
           </div>
 
-          <!-- Photo Slot 4 -->
+          <!-- Slot 4 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">4. Switch Port / LED</span>
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">4. Switch Port</span>
             <div id="photo-preview-4" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
               <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
@@ -284,9 +302,9 @@
             <input type="file" id="file-input-4" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 4)">
           </div>
 
-          <!-- Photo Slot 5 -->
+          <!-- Slot 5 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">5. Wider Area Context</span>
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">5. Area View</span>
             <div id="photo-preview-5" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
               <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
@@ -298,9 +316,9 @@
             <input type="file" id="file-input-5" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 5)">
           </div>
 
-          <!-- Photo Slot 6 -->
+          <!-- Slot 6 -->
           <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">6. Cable / Drop Note</span>
+            <span class="text-xs font-bold text-slate-700 text-center mb-1">6. Drop Note</span>
             <div id="photo-preview-6" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
               <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
               <span class="text-[10px] text-slate-500">No photo added</span>
@@ -314,10 +332,10 @@
         </div>
       </div>
 
-      <!-- Section 4: Field Notes & Signature -->
+      <!-- Section 5: Field Notes & Signature -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
         <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center space-x-2">
-          <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">4</span>
+          <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">5</span>
           <span>Field Notes & Sign-Off Signature</span>
         </h2>
 
@@ -339,7 +357,7 @@
         </div>
       </div>
 
-      <!-- Bottom Form Actions -->
+      <!-- Bottom Actions Bar -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
         <button type="button" onclick="startNextAP()" class="w-full sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 transition flex items-center justify-center space-x-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -347,7 +365,7 @@
         </button>
         <div class="w-full sm:w-auto flex items-center space-x-3">
           <button type="button" onclick="switchTab('preview')" class="w-1/2 sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-lg bg-slate-700 hover:bg-slate-800 text-white transition">
-            Preview 1-Page Sheet
+            Preview Sheet
           </button>
           <button type="button" onclick="triggerPrintExport()" class="w-1/2 sm:w-auto px-5 py-2.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition flex items-center justify-center space-x-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -373,28 +391,28 @@
         </div>
       </div>
 
-      <!-- Live A4 Single Page Print Sheet (Strict Dimension Box - Zero Edge/Bottom Overflow) -->
+      <!-- Live A4 Single Page Print Sheet (Strict 195mm Box - Aspect-Ratio Preserved Images) -->
       <div id="print-sheet" class="bg-white text-slate-900 border border-slate-300 rounded-lg shadow-lg p-3 sm:p-4 text-xs space-y-2.5">
 
         <!-- Sheet Header -->
         <div class="flex items-center justify-between border-b-2 border-navy-900 pb-1.5">
           <div>
-            <h1 class="text-sm sm:text-base font-extrabold text-navy-900 uppercase tracking-wide leading-none">Tottenham Wi-Fi Upgrade Project</h1>
+            <h1 class="text-sm sm:text-base font-extrabold text-navy-900 uppercase tracking-wide leading-none">TOTTENHAM WI-FI UPGRADE PROJECT</h1>
             <h2 class="text-[10px] font-bold text-blue-700 mt-0.5">Access Point Installation & Quality Audit Sheet</h2>
           </div>
           <div class="text-right">
             <div class="px-2 py-0.5 bg-navy-900 text-white font-mono font-bold rounded text-[11px] tracking-wider uppercase inline-block" id="prev_hostname_badge">
-              AP-HOSTNAME
+              ST-AP-0504-002
             </div>
-            <span class="text-[9px] text-slate-500 block mt-0.5" id="prev_date_stamp">Date: 2026-11-20</span>
+            <span class="text-[9px] text-slate-500 block mt-0.5" id="prev_date_stamp">Date: 2026-11-23</span>
           </div>
         </div>
 
-        <!-- Meta Summary Grid -->
+        <!-- Metadata Strip -->
         <div class="grid grid-cols-4 gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 text-[10px]">
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Auditor</span>
-            <span class="font-semibold text-slate-800 truncate block" id="prev_auditor">-</span>
+            <span class="font-semibold text-slate-800 truncate block" id="prev_auditor">Gareth Beth</span>
           </div>
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Venue / Building</span>
@@ -402,81 +420,84 @@
           </div>
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Floor Level</span>
-            <span class="font-semibold text-slate-800 truncate block" id="prev_floor">-</span>
+            <span class="font-semibold text-slate-800 truncate block" id="prev_floor">L5 - SCR04</span>
           </div>
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Location Ref</span>
-            <span class="font-semibold text-slate-800 truncate block" id="prev_room">-</span>
+            <span class="font-semibold text-slate-800 truncate block" id="prev_room">F&amp;B BAR</span>
           </div>
         </div>
 
-        <!-- AP & Wiring Details Grid -->
+        <!-- Re-ordered Side-by-Side Summary Cards -->
         <div class="grid grid-cols-2 gap-2">
-          <div class="border border-slate-200 rounded p-1.5 space-y-0.5 bg-white">
-            <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[9px] uppercase tracking-wider">Access Point Info</h3>
-            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Port ID:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_port_id">-</span></div>
+          <!-- Left Card: PATCHING INFO -->
+          <div class="border border-slate-200 rounded p-1.5 space-y-1 bg-white">
+            <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[9px] uppercase tracking-wider">PATCHING INFO</h3>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Port ID:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_port_id">SCR/05/04/A1/U30/187</span></div>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Switch ID:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_switch">SW-ACC-01-01-01</span></div>
           </div>
-          <div class="border border-slate-200 rounded p-1.5 space-y-0.5 bg-white">
-            <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[9px] uppercase tracking-wider">Cable & Mounting Info</h3>
-            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Switch ID:</span> <span class="font-bold text-slate-900 uppercase" id="prev_switch">-</span></div>
-            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Mounting Type:</span> <span class="font-semibold text-slate-900" id="prev_mount">-</span></div>
-            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Audit Status:</span> <span class="font-bold text-emerald-700 uppercase">COMPLETED &amp; VERIFIED</span></div>
+
+          <!-- Right Card: MOUNTING INFO -->
+          <div class="border border-slate-200 rounded p-1.5 space-y-1 bg-white">
+            <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[9px] uppercase tracking-wider">MOUNTING INFO</h3>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Mounting Type:</span> <span class="font-semibold text-slate-900" id="prev_mount">Pole/Truss</span></div>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Audit Status:</span> <span class="font-bold text-emerald-700 uppercase" id="prev_status">COMPLETED &amp; VERIFIED</span></div>
           </div>
         </div>
 
-        <!-- 6 Photo Grid on Print Sheet (Explicit Heights for Crisp Fit) -->
+        <!-- 6 Photo Grid (Fixed 28mm Containers with object-contain for Uncropped Portrait Shots) -->
         <div>
           <h3 class="font-bold text-navy-900 text-[9px] uppercase tracking-wider mb-1">Photographic Verification Records (6 Slots)</h3>
           <div class="grid grid-cols-3 gap-1.5">
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
               <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">1. MAC / Label</span>
-              <div class="w-full h-14 sm:h-16 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
-                <img id="prev-img-1" class="w-full h-full object-cover hidden" alt="Label">
+              <div class="w-full h-[28mm] max-h-[28mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
+                <img id="prev-img-1" class="w-full h-full object-contain hidden" alt="Label">
                 <span id="prev-placeholder-1" class="text-[8px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
               <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">2. Mounted AP</span>
-              <div class="w-full h-14 sm:h-16 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
-                <img id="prev-img-2" class="w-full h-full object-cover hidden" alt="Mounted">
+              <div class="w-full h-[28mm] max-h-[28mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
+                <img id="prev-img-2" class="w-full h-full object-contain hidden" alt="Mounted">
                 <span id="prev-placeholder-2" class="text-[8px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
               <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">3. Patch Outlet</span>
-              <div class="w-full h-14 sm:h-16 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
-                <img id="prev-img-3" class="w-full h-full object-cover hidden" alt="Patch">
+              <div class="w-full h-[28mm] max-h-[28mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
+                <img id="prev-img-3" class="w-full h-full object-contain hidden" alt="Patch">
                 <span id="prev-placeholder-3" class="text-[8px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
               <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">4. Switch Port</span>
-              <div class="w-full h-14 sm:h-16 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
-                <img id="prev-img-4" class="w-full h-full object-cover hidden" alt="Switch">
+              <div class="w-full h-[28mm] max-h-[28mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
+                <img id="prev-img-4" class="w-full h-full object-contain hidden" alt="Switch">
                 <span id="prev-placeholder-4" class="text-[8px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
               <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">5. Area View</span>
-              <div class="w-full h-14 sm:h-16 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
-                <img id="prev-img-5" class="w-full h-full object-cover hidden" alt="Area">
+              <div class="w-full h-[28mm] max-h-[28mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
+                <img id="prev-img-5" class="w-full h-full object-contain hidden" alt="Area">
                 <span id="prev-placeholder-5" class="text-[8px] text-slate-400">No Image</span>
               </div>
             </div>
             <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
               <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">6. Drop Note</span>
-              <div class="w-full h-14 sm:h-16 bg-slate-200 rounded overflow-hidden flex items-center justify-center">
-                <img id="prev-img-6" class="w-full h-full object-cover hidden" alt="Notes">
+              <div class="w-full h-[28mm] max-h-[28mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
+                <img id="prev-img-6" class="w-full h-full object-contain hidden" alt="Notes">
                 <span id="prev-placeholder-6" class="text-[8px] text-slate-400">No Image</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Notes & Signature Footer (Guaranteed Fit Above Bottom Margin) -->
+        <!-- Field Notes & Signature Row -->
         <div class="grid grid-cols-3 gap-2 border-t border-slate-200 pt-1.5">
           <div class="col-span-2">
-            <span class="text-[8px] font-bold text-slate-500 uppercase block mb-0.5">Field Notes & Observations</span>
+            <span class="text-[8px] font-bold text-slate-500 uppercase block mb-0.5">Field Notes &amp; Observations</span>
             <p id="prev_notes" class="text-[9px] text-slate-700 italic bg-slate-50 p-1.5 rounded border border-slate-200 h-10 overflow-hidden leading-tight">
               No notes entered.
             </p>
@@ -495,29 +516,29 @@
 
   </main>
 
-  <!-- CAMERA & MULTI-PASS OCR MAC SCANNER MODAL -->
+  <!-- CAMERA & MULTI-PASS OCR MODAL -->
   <div id="ocr-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col max-h-[90vh]">
 
       <div class="bg-navy-900 text-white px-4 py-3 flex items-center justify-between">
         <h3 class="text-sm font-bold flex items-center space-x-2">
           <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-          <span>Scan Port ID / Code</span>
+          <span>Scan Code / Identifier</span>
         </h3>
         <button type="button" onclick="closeOcrModal()" class="text-slate-400 hover:text-white text-lg font-bold p-1">&times;</button>
       </div>
 
       <div class="p-4 overflow-y-auto space-y-3 flex-1">
-        <!-- Live Video Viewfinder -->
+        <!-- Video Viewfinder -->
         <div class="relative bg-slate-900 rounded-xl overflow-hidden aspect-video flex items-center justify-center border border-slate-700">
           <video id="ocr-video" autoplay playsinline class="w-full h-full object-cover"></video>
 
           <div class="absolute inset-4 border-2 border-dashed border-blue-400/70 rounded-lg pointer-events-none flex items-center justify-center">
-            <span class="bg-navy-900/80 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur">Position Port ID / Code Here</span>
+            <span class="bg-navy-900/80 text-blue-200 text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur">Center Code Label Here</span>
           </div>
         </div>
 
-        <!-- Camera Control Buttons -->
+        <!-- Controls -->
         <div class="grid grid-cols-3 gap-2">
           <button type="button" onclick="captureLiveVideoFrame()" class="py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow transition">
             Snap Frame
@@ -531,21 +552,20 @@
           <input type="file" id="ocr-file-input" accept="image/*" class="hidden" onchange="handleOcrFileSelect(event)">
         </div>
 
-        <!-- OCR Status Indicator -->
+        <!-- Status Box -->
         <div id="ocr-status" class="hidden p-2.5 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800 font-medium flex items-center space-x-2">
           <svg class="w-4 h-4 animate-spin text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-          <span id="ocr-status-text">Processing scan passes...</span>
+          <span id="ocr-status-text">Processing image passes...</span>
         </div>
 
-        <!-- Detected Value Edit Box -->
+        <!-- Result Edit Box -->
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Detected / Editable Value</label>
-          <input type="text" id="ocr-result-input" oninput="this.value = this.value.toUpperCase();" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 uppercase font-bold text-navy-900 bg-slate-50" placeholder="Extracted MAC will appear here">
-          <p id="ocr-msg" class="text-[11px] text-slate-500 mt-1">Text detected. Please verify or correct the extracted value above.</p>
+          <input type="text" id="ocr-result-input" oninput="this.value = this.value.toUpperCase();" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 uppercase font-bold text-navy-900 bg-slate-50" placeholder="Scanned value will appear here">
+          <p id="ocr-msg" class="text-[11px] text-slate-500 mt-1">Text detected. Verify or adjust extracted string above.</p>
         </div>
       </div>
 
-      <!-- Modal Actions -->
       <div class="px-4 py-3 bg-slate-50 border-t border-slate-200 flex items-center justify-end space-x-2">
         <button type="button" onclick="closeOcrModal()" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800">
           Cancel
@@ -558,7 +578,7 @@
     </div>
   </div>
 
-  <!-- Notification Toast Container -->
+  <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
   <!-- APPLICATION LOGIC JAVASCRIPT -->
@@ -615,19 +635,29 @@
       }, 3000);
     }
 
+    function getSelectedMountType() {
+      const radios = document.getElementsByName('mount_type');
+      for (const radio of radios) {
+        if (radio.checked) return radio.value;
+      }
+      return 'Pole/Truss';
+    }
+
     // FORM & PREVIEW SYNCHRONIZATION WITH AUTO-UPPERCASE
     function syncAllFields() {
       const apHostnameEl = document.getElementById('ap_hostname');
       if (apHostnameEl) apHostnameEl.value = apHostnameEl.value.toUpperCase();
       const portIdEl = document.getElementById('port_id');
       if (portIdEl) portIdEl.value = portIdEl.value.toUpperCase();
+      const roomGridEl = document.getElementById('room_grid');
+      if (roomGridEl) roomGridEl.value = roomGridEl.value.toUpperCase();
       const switchIdEl = document.getElementById('switch_id');
       if (switchIdEl) switchIdEl.value = switchIdEl.value.toUpperCase();
 
-      const hostname = (apHostnameEl ? apHostnameEl.value.trim() : '') || 'AP-HOSTNAME';
+      const hostname = (apHostnameEl ? apHostnameEl.value.trim() : '') || 'ST-AP-0504-002';
       document.getElementById('prev_hostname_badge').textContent = hostname.toUpperCase();
 
-      const auditor = document.getElementById('auditor_name').value.trim() || '-';
+      const auditor = document.getElementById('auditor_name').value.trim() || 'Gareth Beth';
       document.getElementById('prev_auditor').textContent = auditor;
 
       const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
@@ -636,24 +666,31 @@
       const building = document.getElementById('building_name').value.trim() || 'Tottenham Stadium';
       document.getElementById('prev_building').textContent = building;
 
-      const floor = document.getElementById('floor_level').value.trim() || '-';
+      const floor = document.getElementById('floor_level').value.trim() || 'L5 - SCR04';
       document.getElementById('prev_floor').textContent = floor;
 
-      const room = document.getElementById('room_grid').value.trim() || '-';
-      document.getElementById('prev_room').textContent = room;
+      const room = (roomGridEl ? roomGridEl.value.trim() : '') || 'F&B BAR';
+      document.getElementById('prev_room').textContent = room.toUpperCase();
 
-      const portId = (portIdEl ? portIdEl.value.trim() : '') || '-';
+      const portId = (portIdEl ? portIdEl.value.trim() : '') || 'SCR/05/04/A1/U30/187';
       document.getElementById('prev_port_id').textContent = portId.toUpperCase();
 
-      const switchVal = (switchIdEl ? switchIdEl.value.trim() : '') || '-';
+      const switchVal = (switchIdEl ? switchIdEl.value.trim() : '') || 'SW-ACC-01-01-01';
       document.getElementById('prev_switch').textContent = switchVal.toUpperCase();
 
-      const mounts = [];
-      if (document.getElementById('mount_tbar').checked) mounts.push('T-Bar Ceiling');
-      if (document.getElementById('mount_solid').checked) mounts.push('Solid Ceiling');
-      if (document.getElementById('mount_wall').checked) mounts.push('Wall');
-      if (document.getElementById('mount_pole').checked) mounts.push('Pole/Truss');
-      document.getElementById('prev_mount').textContent = mounts.length > 0 ? mounts.join(', ') : 'Standard Bracket';
+      document.getElementById('prev_mount').textContent = getSelectedMountType();
+
+      const statusEl = document.getElementById('audit_status');
+      const statusVal = statusEl ? statusEl.value : 'COMPLETED & VERIFIED';
+      const prevStatusEl = document.getElementById('prev_status');
+      prevStatusEl.textContent = statusVal;
+      if (statusVal.includes('COMPLETED')) {
+        prevStatusEl.className = 'font-bold text-emerald-700 uppercase';
+      } else if (statusVal.includes('PENDING')) {
+        prevStatusEl.className = 'font-bold text-amber-700 uppercase';
+      } else {
+        prevStatusEl.className = 'font-bold text-rose-700 uppercase';
+      }
 
       const notes = document.getElementById('field_notes').value.trim();
       document.getElementById('prev_notes').textContent = notes || 'No notes entered.';
@@ -702,7 +739,7 @@
       sigCanvas.width = rect.width * 2;
       sigCanvas.height = rect.height * 2;
       sigCtx.scale(2, 2);
-      sigCtx.strokeStyle = '#0f2342';
+      sigCtx.strokeStyle = '#0f172a';
       sigCtx.lineWidth = 2.5;
       sigCtx.lineCap = 'round';
 
@@ -768,7 +805,7 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          const maxDim = 1000; // Crisp resolution for PDF export
+          const maxDim = 1200;
           let w = img.width;
           let h = img.height;
           if (w > maxDim || h > maxDim) {
@@ -796,7 +833,7 @@
       const container = document.getElementById(`photo-preview-${slot}`);
       if (!container) return;
       if (photoData[slot]) {
-        container.innerHTML = `<img src="${photoData[slot]}" class="w-full h-full object-cover rounded-md" alt="Slot ${slot}">`;
+        container.innerHTML = `<img src="${photoData[slot]}" class="w-full h-full object-contain rounded-md" alt="Slot ${slot}">`;
       } else {
         container.innerHTML = `
           <svg class="w-7 h-7 mb-1 stroke-current text-slate-400" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
@@ -822,16 +859,14 @@
           floor_level: document.getElementById('floor_level').value,
           ap_hostname: document.getElementById('ap_hostname').value.toUpperCase(),
           port_id: document.getElementById('port_id').value.toUpperCase(),
-          room_grid: document.getElementById('room_grid').value,
+          room_grid: document.getElementById('room_grid').value.toUpperCase(),
           switch_id: document.getElementById('switch_id').value.toUpperCase(),
-          mount_tbar: document.getElementById('mount_tbar').checked,
-          mount_solid: document.getElementById('mount_solid').checked,
-          mount_wall: document.getElementById('mount_wall').checked,
-          mount_pole: document.getElementById('mount_pole').checked,
+          mount_type: getSelectedMountType(),
+          audit_status: document.getElementById('audit_status').value,
           field_notes: document.getElementById('field_notes').value,
           photoData: photoData
         };
-        localStorage.setItem('tottenham_ap_audit_draft', JSON.stringify(draft));
+        localStorage.setItem('tottenham_ap_audit_draft_v10', JSON.stringify(draft));
         if (notify) showToast('Draft saved to local storage');
       } catch (err) {
         console.warn('Storage warning:', err);
@@ -841,7 +876,7 @@
 
     function loadDraftFromStorage() {
       try {
-        const data = localStorage.getItem('tottenham_ap_audit_draft');
+        const data = localStorage.getItem('tottenham_ap_audit_draft_v10') || localStorage.getItem('tottenham_ap_audit_draft');
         if (!data) return;
         const draft = JSON.parse(data);
         if (draft.auditor_name) document.getElementById('auditor_name').value = draft.auditor_name;
@@ -850,15 +885,17 @@
         if (draft.floor_level) document.getElementById('floor_level').value = draft.floor_level;
         if (draft.ap_hostname) document.getElementById('ap_hostname').value = draft.ap_hostname.toUpperCase();
         if (draft.port_id) document.getElementById('port_id').value = draft.port_id.toUpperCase();
-        else if (draft.ap_mac) document.getElementById('port_id').value = draft.ap_mac.toUpperCase();
-        if (draft.room_grid) document.getElementById('room_grid').value = draft.room_grid;
+        if (draft.room_grid) document.getElementById('room_grid').value = draft.room_grid.toUpperCase();
         if (draft.switch_id) document.getElementById('switch_id').value = draft.switch_id.toUpperCase();
-        else if (draft.patch_port) document.getElementById('switch_id').value = draft.patch_port.toUpperCase();
+        if (draft.audit_status) document.getElementById('audit_status').value = draft.audit_status;
 
-        document.getElementById('mount_tbar').checked = !!draft.mount_tbar;
-        document.getElementById('mount_solid').checked = !!draft.mount_solid;
-        document.getElementById('mount_wall').checked = !!draft.mount_wall;
-        document.getElementById('mount_pole').checked = !!draft.mount_pole;
+        if (draft.mount_type) {
+          const radios = document.getElementsByName('mount_type');
+          for (const radio of radios) {
+            if (radio.value === draft.mount_type) radio.checked = true;
+          }
+        }
+
         if (draft.field_notes) document.getElementById('field_notes').value = draft.field_notes;
 
         if (draft.photoData && Array.isArray(draft.photoData)) {
@@ -879,9 +916,7 @@
         const el = document.getElementById(id);
         if (el) el.value = '';
       });
-      ['mount_tbar', 'mount_solid', 'mount_wall', 'mount_pole'].forEach((id) => {
-        document.getElementById(id).checked = false;
-      });
+      document.getElementById('audit_status').value = 'COMPLETED & VERIFIED';
       for (let i = 1; i <= 6; i++) {
         photoData[i] = null;
         updatePhotoSlotUI(i);
@@ -893,12 +928,12 @@
       showToast('Ready for next AP');
     }
 
-    // MULTI-PASS OCR ENGINE
+    // MULTI-PASS OCR ENGINE FOR LOW-LIGHT STICKERS
     function openOcrModal(targetFieldId) {
       currentOcrTargetId = targetFieldId;
       document.getElementById('ocr-modal').classList.remove('hidden');
       document.getElementById('ocr-result-input').value = '';
-      document.getElementById('ocr-msg').textContent = 'Position sticker in viewfinder or upload a photo.';
+      document.getElementById('ocr-msg').textContent = 'Position label in viewfinder or upload a photo.';
       document.getElementById('ocr-msg').className = 'text-[11px] text-slate-500 mt-1';
       document.getElementById('ocr-status').classList.add('hidden');
       startLiveCamera();
@@ -922,7 +957,7 @@
         mediaStream = stream;
         video.srcObject = stream;
       }).catch((err) => {
-        console.warn('Camera stream error:', err);
+        console.warn('Camera error:', err);
         showToast('Camera feed unavailable. Use Photo / File button.', true);
       });
     }
@@ -984,13 +1019,13 @@
 
       statusDiv.classList.remove('hidden');
       statusText.textContent = 'Scanning image (Multi-pass ROI)...';
-      msgText.textContent = 'Analyzing image passes...';
+      msgText.textContent = 'Analyzing contrast passes...';
       inputEl.value = '';
 
       try {
         const candidates = [];
 
-        // Pass 1: Lower 60% crop
+        // Pass 1: Lower 60% ROI crop
         const cropLower = document.createElement('canvas');
         cropLower.width = sourceCanvas.width;
         cropLower.height = Math.round(sourceCanvas.height * 0.6);
@@ -1001,42 +1036,34 @@
         // Pass 2: Full frame contrast boost
         candidates.push(enhanceContrastCanvas(sourceCanvas, 2.2));
 
-        // Pass 3: Center 70% zoom crop
-        const cropCenter = document.createElement('canvas');
-        cropCenter.width = Math.round(sourceCanvas.width * 0.7);
-        cropCenter.height = Math.round(sourceCanvas.height * 0.7);
-        const ctxC = cropCenter.getContext('2d');
-        ctxC.drawImage(sourceCanvas, Math.round(sourceCanvas.width * 0.15), Math.round(sourceCanvas.height * 0.15), cropCenter.width, cropCenter.height, 0, 0, cropCenter.width, cropCenter.height);
-        candidates.push(enhanceContrastCanvas(cropCenter, 1.5));
-
-        let extractedMac = null;
+        let detectedValue = null;
 
         for (let i = 0; i < candidates.length; i++) {
           statusText.textContent = `Scanning pass ${i + 1} of ${candidates.length}...`;
           const result = await Tesseract.recognize(candidates[i], 'eng');
           const text = result.data.text || '';
-          const found = parseMacFromOcrText(text);
-          if (found) {
-            extractedMac = found.toUpperCase();
+          const cleaned = filterCleanedOcrText(text);
+          if (cleaned) {
+            detectedValue = cleaned.toUpperCase();
             break;
           }
         }
 
         statusDiv.classList.add('hidden');
 
-        if (extractedMac) {
-          inputEl.value = extractedMac.toUpperCase();
-          msgText.textContent = '✨ Valid MAC address detected! Verify or edit above.';
+        if (detectedValue) {
+          inputEl.value = detectedValue.toUpperCase();
+          msgText.textContent = '✨ Value extracted! Verify or edit above.';
           msgText.className = 'text-[11px] text-emerald-600 font-bold mt-1';
-          showToast(`MAC Detected: ${extractedMac.toUpperCase()}`);
+          showToast(`Extracted: ${detectedValue.toUpperCase()}`);
         } else {
-          msgText.textContent = '⚠️ No MAC pattern detected. Zoom closer to the "MAC:" line or type/paste MAC above.';
+          msgText.textContent = '⚠️ Could not read code automatically. Type value above or zoom closer.';
           msgText.className = 'text-[11px] text-amber-600 font-bold mt-1';
         }
       } catch (err) {
         console.error('OCR Error:', err);
         statusDiv.classList.add('hidden');
-        msgText.textContent = 'OCR process encountered an issue. Type MAC address manually above.';
+        msgText.textContent = 'OCR process encountered an issue. Type value manually above.';
         msgText.className = 'text-[11px] text-rose-600 font-medium mt-1';
       }
     }
@@ -1064,31 +1091,16 @@
       return outCanvas;
     }
 
-    function parseMacFromOcrText(rawText) {
+    function filterCleanedOcrText(rawText) {
       const lines = rawText.split('\n');
       for (let line of lines) {
-        const upper = line.toUpperCase();
-        if (upper.includes('PID') || upper.includes('VID') || upper.includes('MODEL') || upper.includes('MADE IN') || upper.includes('PO ')) {
+        const upper = line.toUpperCase().trim();
+        if (upper.includes('PID') || upper.includes('VID') || upper.includes('MADE IN') || upper.includes('PO ')) {
           continue;
         }
-
-        let cleaned = upper
-          .replace(/MAC/g, '')
-          .replace(/ADDR/g, '')
-          .replace(/[^A-Z0-9]/g, '');
-
-        if (cleaned.length >= 12) {
-          for (let start = 0; start <= cleaned.length - 12; start++) {
-            let candidate = cleaned.substring(start, start + 12);
-            candidate = candidate
-              .replace(/O/g, '0').replace(/Q/g, '0')
-              .replace(/I/g, '1').replace(/L/g, '1')
-              .replace(/S/g, '5').replace(/Z/g, '2');
-
-            if (/^[0-9A-F]{12}$/.test(candidate)) {
-              return candidate.match(/.{1,2}/g).join(':').toUpperCase();
-            }
-          }
+        const alphanumeric = upper.replace(/[^A-Z0-9\/-]/g, '');
+        if (alphanumeric.length >= 6) {
+          return alphanumeric;
         }
       }
       return null;
@@ -1108,7 +1120,7 @@
       closeOcrModal();
     }
 
-    // ULTRA-SHARP DIRECT PDF GENERATION (HIGH RESOLUTION SCALE 3, 1-PAGE EXACT FIT)
+    // DIRECT CLIENT-SIDE PDF EXPORT (html2pdf.js, scale: 3, NEVER window.print())
     function triggerPrintExport() {
       syncAllFields();
       saveDraftToStorage(false);
@@ -1124,7 +1136,7 @@
       const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
       const filename = `Tottenham_AP_Audit_${cleanHostname}_${dateVal}.pdf`;
 
-      showToast('Generating sharp 1-page PDF file...');
+      showToast('Generating 1-Page PDF File...');
 
       const previewTab = document.getElementById('tab-content-preview');
       const formTab = document.getElementById('tab-content-form');
@@ -1138,7 +1150,7 @@
       window.scrollTo(0, 0);
 
       const opt = {
-        margin:       [3, 3, 3, 3],
+        margin:       [5, 7, 5, 7],
         filename:     filename,
         image:        { type: 'jpeg', quality: 1.0 },
         html2canvas:  { 
@@ -1157,7 +1169,7 @@
             previewTab.classList.add('hidden');
             formTab.classList.remove('hidden');
           }
-          showToast('Sharp 1-Page PDF Downloaded!');
+          showToast('1-Page PDF Downloaded!');
         })
         .catch((err) => {
           console.error('PDF generation error:', err);
