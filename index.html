@@ -1134,7 +1134,7 @@
       const hostname = document.getElementById('ap_hostname').value.trim().toUpperCase() || 'AP';
       const cleanHostname = hostname.replace(/[^A-Z0-9_-]/g, '_');
       const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
-      const filename = `Tottenham_AP_Audit_${cleanHostname}_${dateVal}.pdf`;
+      const filename = `${cleanHostname}_${dateVal}.pdf`;
 
       showToast('Generating 1-Page PDF File...');
 
