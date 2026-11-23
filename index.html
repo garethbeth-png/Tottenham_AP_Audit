@@ -101,6 +101,10 @@
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 022 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
           <span class="hidden sm:inline">Save Draft</span>
         </button>
+        <button type="button" onclick="shareFormLink()" class="px-3 py-1.5 text-xs font-semibold rounded-md bg-blue-700 hover:bg-blue-600 text-white shadow transition flex items-center space-x-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-5.367 3 3 0 000 5.367zm0 8.002a3 3 0 100-5.367 3 3 0 000 5.367z"></path></svg>
+          <span>Share Link</span>
+        </button>
         <button type="button" onclick="triggerPrintExport()" class="px-3.5 py-1.5 text-xs font-bold rounded-md bg-emerald-600 hover:bg-emerald-500 text-white shadow transition flex items-center space-x-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
           <span>Save PDF</span>
@@ -363,11 +367,15 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
           <span>Reset Form / Next AP</span>
         </button>
-        <div class="w-full sm:w-auto flex items-center space-x-3">
-          <button type="button" onclick="switchTab('preview')" class="w-1/2 sm:w-auto px-4 py-2.5 text-xs font-semibold rounded-lg bg-slate-700 hover:bg-slate-800 text-white transition">
+        <div class="w-full sm:w-auto flex flex-wrap items-center gap-2">
+          <button type="button" onclick="shareFormLink()" class="flex-1 sm:flex-none px-4 py-2.5 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow transition flex items-center justify-center space-x-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 100-5.367 3 3 0 000 5.367zm0 8.002a3 3 0 100-5.367 3 3 0 000 5.367z"></path></svg>
+            <span>Share Form Link</span>
+          </button>
+          <button type="button" onclick="switchTab('preview')" class="flex-1 sm:flex-none px-4 py-2.5 text-xs font-semibold rounded-lg bg-slate-700 hover:bg-slate-800 text-white transition">
             Preview Sheet
           </button>
-          <button type="button" onclick="triggerPrintExport()" class="w-1/2 sm:w-auto px-5 py-2.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition flex items-center justify-center space-x-2">
+          <button type="button" onclick="triggerPrintExport()" class="flex-1 sm:flex-none px-5 py-2.5 text-xs font-bold rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white shadow-md transition flex items-center justify-center space-x-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             <span>Save PDF File</span>
           </button>
@@ -599,6 +607,7 @@
 
       initSignaturePad();
       loadDraftFromStorage();
+      loadFromUrlParams();
       syncAllFields();
     };
 
@@ -871,6 +880,115 @@
       } catch (err) {
         console.warn('Storage warning:', err);
         if (notify) showToast('Draft saved');
+      }
+    }
+
+    // GENERATE & SHARE A DIRECT DEEP-LINK CONTAINING ALL AUDIT METADATA
+    function shareFormLink() {
+      syncAllFields();
+      saveDraftToStorage(false);
+
+      const draft = {
+        auditor_name: document.getElementById('auditor_name').value,
+        install_date: document.getElementById('install_date').value,
+        building_name: document.getElementById('building_name').value,
+        floor_level: document.getElementById('floor_level').value,
+        ap_hostname: document.getElementById('ap_hostname').value.toUpperCase(),
+        port_id: document.getElementById('port_id').value.toUpperCase(),
+        room_grid: document.getElementById('room_grid').value.toUpperCase(),
+        switch_id: document.getElementById('switch_id').value.toUpperCase(),
+        mount_type: getSelectedMountType(),
+        audit_status: document.getElementById('audit_status').value,
+        field_notes: document.getElementById('field_notes').value
+      };
+
+      try {
+        const payloadStr = encodeURIComponent(JSON.stringify(draft));
+        const b64 = btoa(payloadStr);
+        const baseUrl = window.location.origin + window.location.pathname;
+        const shareUrl = `${baseUrl}?audit=${encodeURIComponent(b64)}`;
+
+        const apName = draft.ap_hostname || 'AP Audit';
+
+        if (navigator.share) {
+          navigator.share({
+            title: `Tottenham AP Audit - ${apName}`,
+            text: `AP Installation Audit Form data for ${apName}`,
+            url: shareUrl
+          }).then(() => {
+            showToast('Form link shared!');
+          }).catch(() => {
+            copyTextToClipboard(shareUrl, `Link copied for ${apName}!`);
+          });
+        } else {
+          copyTextToClipboard(shareUrl, `Link copied for ${apName}!`);
+        }
+      } catch (err) {
+        console.error('Error generating link:', err);
+        showToast('Could not generate URL link', true);
+      }
+    }
+
+    function copyTextToClipboard(text, successMsg) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(successMsg);
+        }).catch(() => fallbackCopy(text, successMsg));
+      } else {
+        fallbackCopy(text, successMsg);
+      }
+    }
+
+    function fallbackCopy(text, successMsg) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast(successMsg);
+      } catch (err) {
+        showToast('Copy failed. Please copy URL manually.', true);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function loadFromUrlParams() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        let b64 = urlParams.get('audit');
+        if (!b64 && window.location.hash.startsWith('#audit=')) {
+          b64 = window.location.hash.substring(7);
+        }
+        if (!b64) return;
+
+        const payloadStr = decodeURIComponent(atob(b64));
+        const draft = JSON.parse(payloadStr);
+
+        if (draft.auditor_name) document.getElementById('auditor_name').value = draft.auditor_name;
+        if (draft.install_date) document.getElementById('install_date').value = draft.install_date;
+        if (draft.building_name) document.getElementById('building_name').value = draft.building_name;
+        if (draft.floor_level) document.getElementById('floor_level').value = draft.floor_level;
+        if (draft.ap_hostname) document.getElementById('ap_hostname').value = draft.ap_hostname.toUpperCase();
+        if (draft.port_id) document.getElementById('port_id').value = draft.port_id.toUpperCase();
+        if (draft.room_grid) document.getElementById('room_grid').value = draft.room_grid.toUpperCase();
+        if (draft.switch_id) document.getElementById('switch_id').value = draft.switch_id.toUpperCase();
+        if (draft.audit_status) document.getElementById('audit_status').value = draft.audit_status;
+
+        if (draft.mount_type) {
+          const radios = document.getElementsByName('mount_type');
+          for (const radio of radios) {
+            if (radio.value === draft.mount_type) radio.checked = true;
+          }
+        }
+
+        if (draft.field_notes) document.getElementById('field_notes').value = draft.field_notes;
+
+        showToast(`Loaded AP Audit link for ${draft.ap_hostname || 'AP'}`);
+      } catch (err) {
+        console.warn('Could not parse URL audit params:', err);
       }
     }
 
