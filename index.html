@@ -316,6 +316,20 @@
           Copy an image from <span class="font-semibold text-slate-700">Phone Link</span> and press <span class="font-semibold text-slate-700">Ctrl+V</span> anywhere on this page (or click <span class="font-semibold text-slate-700">Paste Image</span>). You can also click the box below or drag &amp; drop a photo file.
         </p>
 
+        <!-- Dedicated Contenteditable Paste Catcher for Windows Phone Link / Rich Clipboard Payloads -->
+        <div
+          id="paste-catcher"
+          contenteditable="true"
+          role="textbox"
+          aria-label="Paste image area"
+          oninput="handlePasteCatcherInput(this)"
+          onfocus="this.classList.add('ring-2','ring-blue-500','border-blue-500','bg-blue-50/40')"
+          onblur="this.classList.remove('ring-2','ring-blue-500','border-blue-500','bg-blue-50/40')"
+          class="w-full max-w-md mx-auto mb-3 px-3 py-2 rounded-lg border border-blue-200 bg-blue-50/20 text-center text-xs font-semibold text-blue-700 cursor-text focus:outline-none transition select-none"
+        >
+          Click here &amp; press Ctrl+V to paste photo directly from Phone Link
+        </div>
+
         <!-- Desktop-compatible file input (no capture attribute that blocks laptop browsers) -->
         <input
           id="file-input-1"
@@ -661,17 +675,26 @@
       const reader = new FileReader();
       reader.onload = (e) => {
         const rawDataUrl = e.target.result;
+        if (!rawDataUrl || typeof rawDataUrl !== 'string') {
+          showToast('Could not read pasted image.');
+          return;
+        }
+        // Validate via Image() load so extensionless/MIME-less Phone Link blobs are verified and converted cleanly to JPEG
         normalizeWorkingImage(rawDataUrl, 1400, 0.88).then((normalizedUrl) => {
-          setSlotPhoto(slot, normalizedUrl || rawDataUrl);
-          saveDraftToStorage();
-          showToast('Pasted AP MOUNT photo from clipboard.');
+          if (normalizedUrl) {
+            setSlotPhoto(slot, normalizedUrl);
+            saveDraftToStorage();
+            showToast('AP MOUNT photo loaded!');
+          } else {
+            showToast('Unsupported image format. Try dragging the photo onto the box.');
+          }
         });
       };
       reader.onerror = () => showToast('Could not read image from clipboard.');
       reader.readAsDataURL(fileOrBlob);
     }
 
-    // Normalize high-res Phone Link / camera photos so they remain crisp on A4 PDF while fitting cleanly in localStorage
+    // Normalize high-res Phone Link / camera photos via canvas (max 1400px, JPEG 0.88)
     function normalizeWorkingImage(dataUrl, maxDim = 1400, quality = 0.88) {
       return new Promise((resolve) => {
         if (!dataUrl) return resolve(null);
@@ -679,6 +702,7 @@
         img.onload = () => {
           let w = img.width;
           let h = img.height;
+          if (!w || !h) return resolve(null);
           if (w > maxDim || h > maxDim) {
             if (w >= h) {
               h = Math.round((h * maxDim) / w);
@@ -695,7 +719,7 @@
           ctx.drawImage(img, 0, 0, w, h);
           resolve(canvas.toDataURL('image/jpeg', quality));
         };
-        img.onerror = () => resolve(dataUrl);
+        img.onerror = () => resolve(null);
         img.src = dataUrl;
       });
     }
@@ -755,59 +779,41 @@
       return null;
     }
 
-    // Global Ctrl+V / Cmd+V listener supporting Windows Phone Link binary files, clipboard items, and HTML img payloads
-    document.addEventListener('paste', async (event) => {
-      const cd = event.clipboardData;
-      if (!cd) return;
-
-      // 1. Check clipboardData.files first (Windows Phone Link often exposes copied photos here)
-      if (cd.files && cd.files.length > 0) {
-        for (let i = 0; i < cd.files.length; i++) {
-          const file = cd.files[i];
-          if ((file.type && file.type.startsWith('image/')) || /\.(png|jpe?g|webp|gif|bmp)$/i.test(file.name || '')) {
-            event.preventDefault();
-            loadImageFileIntoSlot(file, 1);
+    // Handle images injected directly into the contenteditable paste-catcher box
+    async function handlePasteCatcherInput(el) {
+      if (!el) return;
+      const imgEl = el.querySelector('img[src]');
+      if (imgEl) {
+        const src = imgEl.getAttribute('src') || '';
+        el.innerHTML = 'Click here &amp; press Ctrl+V to paste photo directly from Phone Link';
+        if (src.startsWith('data:image/')) {
+          const normalized = await normalizeWorkingImage(src, 1400, 0.88);
+          if (normalized) {
+            setSlotPhoto(1, normalized);
+            saveDraftToStorage();
+            showToast('AP MOUNT photo pasted!');
             return;
           }
+        } else if (src.startsWith('blob:')) {
+          try {
+            const resp = await fetch(src);
+            const blob = await resp.blob();
+            loadImageFileIntoSlot(blob, 1);
+            return;
+          } catch (_) {}
         }
       }
+      // Restore helper prompt if plain text was typed/pasted into the paste catcher
+      el.innerHTML = 'Click here &amp; press Ctrl+V to paste photo directly from Phone Link';
+    }
 
-      // 2. Check clipboardData.items for image MIME types or file kinds
-      if (cd.items && cd.items.length > 0) {
-        for (let i = 0; i < cd.items.length; i++) {
-          const item = cd.items[i];
-          if ((item.type && item.type.startsWith('image/')) || item.kind === 'file') {
-            const blob = item.getAsFile();
-            if (blob && (!blob.type || blob.type.startsWith('image/') || blob.size > 0)) {
-              event.preventDefault();
-              loadImageFileIntoSlot(blob, 1);
-              return;
-            }
-          }
-        }
-      }
-
-      // 3. Fallback: inspect text/html for embedded <img src="data:image/..."> or blob: URL
-      const htmlData = cd.getData ? cd.getData('text/html') : '';
-      if (htmlData && htmlData.includes('<img')) {
-        event.preventDefault();
-        const extracted = await extractImageFromHtmlString(htmlData);
-        if (typeof extracted === 'string') {
-          const normalized = await normalizeWorkingImage(extracted, 1400, 0.88);
-          setSlotPhoto(1, normalized || extracted);
-          saveDraftToStorage();
-          showToast('Pasted AP MOUNT photo from clipboard.');
-        } else if (extracted instanceof Blob) {
-          loadImageFileIntoSlot(extracted, 1);
-        }
-      }
-    });
-
-    // Dedicated "Paste Image" button using Async Clipboard API with HTML fallback
-    async function pasteImageFromClipboard() {
+    // Shared Async Clipboard API reader (used by both the Paste Image button and paste fallback)
+    async function readFromAsyncClipboard(silent = false) {
       if (!navigator.clipboard || !navigator.clipboard.read) {
-        showToast('Press Ctrl+V on your keyboard to paste the copied image.');
-        return;
+        if (!silent) {
+          showToast('Press Ctrl+V on your keyboard or drag the photo onto the AP MOUNT box.');
+        }
+        return false;
       }
 
       try {
@@ -817,11 +823,11 @@
           if (imageType) {
             const blob = await item.getType(imageType);
             loadImageFileIntoSlot(blob, 1);
-            return;
+            return true;
           }
         }
 
-        // Fallback if clipboard item only exposed text/html with an embedded image
+        // Fallback if clipboard item exposed text/html with an embedded image
         for (const item of clipboardItems) {
           if (item.types.includes('text/html')) {
             const htmlBlob = await item.getType('text/html');
@@ -829,21 +835,117 @@
             const extracted = await extractImageFromHtmlString(htmlText);
             if (typeof extracted === 'string') {
               const normalized = await normalizeWorkingImage(extracted, 1400, 0.88);
-              setSlotPhoto(1, normalized || extracted);
-              saveDraftToStorage();
-              showToast('Pasted AP MOUNT photo from clipboard.');
-              return;
+              if (normalized) {
+                setSlotPhoto(1, normalized);
+                saveDraftToStorage();
+                showToast('AP MOUNT photo pasted!');
+                return true;
+              }
             } else if (extracted instanceof Blob) {
               loadImageFileIntoSlot(extracted, 1);
-              return;
+              return true;
             }
           }
         }
 
-        showToast('No image found in clipboard. Copy an image from Phone Link first.');
+        // Check if Phone Link copied a local Windows file path (e.g. C:\Users\...) as plain text
+        for (const item of clipboardItems) {
+          if (item.types.includes('text/plain')) {
+            const textBlob = await item.getType('text/plain');
+            const plainText = (await textBlob.text()).trim();
+            if (/^([a-zA-Z]:\\|\\\\|file:\/\/\/)/i.test(plainText)) {
+              showToast('Phone Link copied a local file path. Drag the photo from Phone Link onto the AP MOUNT box or click to browse.');
+              return false;
+            }
+          }
+        }
+
+        if (!silent) {
+          showToast('No image found in clipboard. Copy an image from Phone Link first, or drag it onto the box.');
+        }
+        return false;
       } catch (err) {
-        showToast('Click anywhere on the page and press Ctrl+V to paste from Phone Link.');
+        if (!silent) {
+          showToast('Click the blue Paste box above and press Ctrl+V, or drag the photo onto the AP MOUNT box.');
+        }
+        return false;
       }
+    }
+
+    // Global Ctrl+V / Cmd+V listener supporting inputs, textareas, Windows Phone Link files, items, HTML, and Async Clipboard fallback
+    document.addEventListener('paste', async (event) => {
+      const cd = event.clipboardData;
+
+      // 1. Check clipboardData.files first (accepting any File even if file.type is empty)
+      if (cd && cd.files && cd.files.length > 0) {
+        for (let i = 0; i < cd.files.length; i++) {
+          const file = cd.files[i];
+          if (file && file.size > 0) {
+            event.preventDefault();
+            loadImageFileIntoSlot(file, 1);
+            return;
+          }
+        }
+      }
+
+      // 2. Check clipboardData.items for image MIME types or file kinds
+      if (cd && cd.items && cd.items.length > 0) {
+        for (let i = 0; i < cd.items.length; i++) {
+          const item = cd.items[i];
+          if ((item.type && item.type.startsWith('image/')) || item.kind === 'file') {
+            const blob = item.getAsFile();
+            if (blob && blob.size > 0) {
+              event.preventDefault();
+              loadImageFileIntoSlot(blob, 1);
+              return;
+            }
+          }
+        }
+      }
+
+      // 3. Inspect text/html for embedded <img src="data:image/..."> or blob: URL
+      const htmlData = cd && cd.getData ? cd.getData('text/html') : '';
+      if (htmlData && htmlData.includes('<img')) {
+        event.preventDefault();
+        const extracted = await extractImageFromHtmlString(htmlData);
+        if (typeof extracted === 'string') {
+          const normalized = await normalizeWorkingImage(extracted, 1400, 0.88);
+          if (normalized) {
+            setSlotPhoto(1, normalized);
+            saveDraftToStorage();
+            showToast('AP MOUNT photo pasted!');
+            return;
+          }
+        } else if (extracted instanceof Blob) {
+          loadImageFileIntoSlot(extracted, 1);
+          return;
+        }
+      }
+
+      // 4. Check if plain text is a Windows file path copied from Phone Link (e.g. C:\Users\... or file:///...)
+      const plainText = cd && cd.getData ? (cd.getData('text/plain') || '').trim() : '';
+      if (plainText && /^([a-zA-Z]:\\|\\\\|file:\/\/\/)/i.test(plainText)) {
+        event.preventDefault();
+        showToast('Phone Link copied a local file path. Drag the photo from Phone Link onto the AP MOUNT box or click to browse.');
+        return;
+      }
+
+      // 5. If user is focused inside a normal text input/textarea and pasted regular text, let normal text paste proceed
+      const activeTag = (document.activeElement && document.activeElement.tagName || '').toUpperCase();
+      if ((activeTag === 'INPUT' || activeTag === 'TEXTAREA') && plainText.length > 0) {
+        return;
+      }
+
+      // 6. Fallback: if clipboardData had no readable image (common when Windows holds delayed-render image data), query Async Clipboard API
+      if (document.activeElement && document.activeElement.id !== 'paste-catcher') {
+        event.preventDefault();
+        await readFromAsyncClipboard(false);
+      }
+    });
+
+    // Dedicated "Paste Image" button using Async Clipboard API
+    async function pasteImageFromClipboard() {
+      await readFromAsyncClipboard(false);
     }
 
     // Compress AP MOUNT photo into a lightweight JPEG thumbnail for cross-device URL sharing
