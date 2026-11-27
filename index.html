@@ -31,8 +31,9 @@
     /* Strict Single-Page A4 Portrait Dimensions */
     .audit-sheet {
       width: 210mm;
-      height: 297mm;
-      max-height: 297mm;
+      height: 295.5mm;
+      min-height: 295.5mm;
+      max-height: 295.5mm;
       background: #ffffff;
       color: #0f172a;
       box-sizing: border-box;
@@ -420,11 +421,11 @@
         </div>
       </div>
 
-      <!-- Exact 210mm x 297mm Single-Page A4 Sheet -->
+      <!-- Exact 210mm x 295.5mm Single-Page A4 Sheet -->
       <div class="audit-sheet-wrapper flex justify-center">
-        <div id="print-sheet" class="audit-sheet p-7 flex flex-col justify-between border border-slate-200 shadow-lg">
+        <div id="print-sheet" class="audit-sheet p-6 flex flex-col justify-between border border-slate-200 shadow-lg">
           <!-- Top Sheet Content -->
-          <div class="space-y-4">
+          <div class="space-y-3.5">
             <!-- Header Banner (No Installation Date) -->
             <div class="flex items-center justify-between border-b-2 border-slate-900 pb-3 gap-4">
               <div>
@@ -488,12 +489,12 @@
               </div>
             </div>
 
-            <!-- Single Centered Photographic Verification Frame (AP MOUNT, 135mm height, object-contain) -->
+            <!-- Single Centered Photographic Verification Frame (AP MOUNT, 130mm height, object-contain) -->
             <div class="border border-slate-200 rounded-lg p-3">
               <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-900 mb-2">
                 PHOTOGRAPHIC VERIFICATION — AP MOUNT
               </div>
-              <div class="h-[135mm] max-h-[135mm] w-full bg-slate-50 border border-slate-200 rounded-md flex items-center justify-center overflow-hidden p-2">
+              <div class="h-[130mm] max-h-[130mm] w-full bg-slate-50 border border-slate-200 rounded-md flex items-center justify-center overflow-hidden p-2">
                 <img
                   id="sheet-photo-1"
                   src=""
@@ -948,21 +949,7 @@
     function startNextAP() {
       TEXT_FIELD_IDS.forEach((id) => {
         const el = document.getElementById(id);
-        if (el) el.value = '';
-      });
-      setSlotPhoto(1, null);
-      const input = document.getElementById('file-input-1');
-      if (input) input.value = '';
-      localStorage.removeItem(STORAGE_KEY);
-      if (window.location.search || window.location.hash) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-      syncAllFields();
-      switchTab('form');
-      showToast('Form cleared for next AP.');
-    }
-
-    // Direct client-side A4 PDF file download named [AP_HOSTNAME].pdf
+    // Direct client-side A4 PDF file download named [AP_HOSTNAME].pdf (strictly 1 page)
     async function triggerPrintExport() {
       syncAllFields();
 
@@ -979,6 +966,9 @@
       showToast(`Generating ${filename}...`);
 
       const element = document.getElementById('print-sheet');
+      // Temporarily strip outer border & shadow during PDF capture so canvas never exceeds 1 A4 page
+      element.classList.remove('border', 'border-slate-200', 'shadow-lg');
+
       const opt = {
         margin: 0,
         filename: filename,
@@ -997,11 +987,22 @@
       };
 
       try {
-        await html2pdf().set(opt).from(element).save();
+        await html2pdf()
+          .set(opt)
+          .from(element)
+          .toPdf()
+          .get('pdf')
+          .then((pdf) => {
+            while (pdf.internal.getNumberOfPages() > 1) {
+              pdf.deletePage(pdf.internal.getNumberOfPages());
+            }
+          })
+          .save();
         showToast(`Saved ${filename}`);
       } catch (err) {
         showToast('PDF export failed. Please try again.');
       } finally {
+        element.classList.add('border', 'border-slate-200', 'shadow-lg');
         if (wasHidden) {
           previewView.classList.add('hidden');
         }
