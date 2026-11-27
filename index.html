@@ -137,22 +137,18 @@
           <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">1</span>
           <span>Audit Header Information</span>
         </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Auditor Name</label>
-            <input type="text" id="auditor_name" oninput="syncAllFields()" placeholder="e.g. Gareth Beth" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Installation Date</label>
-            <input type="date" id="install_date" onchange="syncAllFields()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="auditor_name" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="E.G. GARETH BETH" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Building / Venue</label>
-            <input type="text" id="building_name" oninput="syncAllFields()" value="Tottenham Stadium" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="building_name" oninput="this.value = this.value.toUpperCase(); syncAllFields();" value="TOTTENHAM STADIUM" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Floor Level</label>
-            <input type="text" id="floor_level" oninput="syncAllFields()" placeholder="e.g. L5 - SCR04" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="floor_level" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="E.G. L5 - SCR04" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
         </div>
       </div>
@@ -167,22 +163,22 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">AP Hostname *</label>
-            <input type="text" id="ap_hostname" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. ST-AP-0504-002" class="w-full px-3 py-2 text-sm font-semibold uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="ap_hostname" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="E.G. ST-AP-0504-002" class="w-full px-3 py-2 text-sm font-semibold uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
 
           <!-- Port ID Field -->
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Port ID *</label>
-            <input type="text" id="port_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. SCR/05/04/A1/U30/187" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase font-bold">
+            <input type="text" id="port_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="E.G. SCR/05/04/A1/U30/187" class="w-full px-3 py-2 text-sm font-mono border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase font-bold">
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Room / Grid / Location Ref</label>
-            <input type="text" id="room_grid" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. F&amp;B BAR" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="room_grid" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="E.G. F&amp;B BAR" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Switch ID</label>
-            <input type="text" id="switch_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="e.g. SW-ACC-01-01-01" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            <input type="text" id="switch_id" oninput="this.value = this.value.toUpperCase(); syncAllFields();" placeholder="E.G. SW-ACC-01-01-01" class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           </div>
         </div>
       </div>
@@ -219,7 +215,7 @@
 
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-2">Audit Status *</label>
-            <select id="audit_status" onchange="syncAllFields()" class="w-full px-3 py-2.5 text-sm font-semibold border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+            <select id="audit_status" onchange="syncAllFields()" class="w-full px-3 py-2.5 text-sm font-semibold uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
               <option value="COMPLETED &amp; VERIFIED" class="text-emerald-700 font-bold">COMPLETED &amp; VERIFIED</option>
               <option value="PENDING PATCHING" class="text-amber-700 font-bold">PENDING PATCHING</option>
               <option value="SNAG / REWORK REQUIRED" class="text-rose-700 font-bold">SNAG / REWORK REQUIRED</option>
@@ -228,99 +224,32 @@
         </div>
       </div>
 
-      <!-- Section 4: Photographic Verification Records (6 Slots) -->
+      <!-- Section 4: Photographic Verification Record (Single Slot: AP MOUNT) -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-5">
         <h2 class="text-base font-bold text-navy-900 border-b border-slate-100 pb-2.5 mb-4 flex items-center justify-between">
           <div class="flex items-center space-x-2">
             <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">4</span>
-            <span>Photographic Evidence (6 Field Slots)</span>
+            <span>Photographic Evidence (AP MOUNT)</span>
           </div>
-          <span class="text-xs text-slate-500 font-normal">Tap slot to capture or upload</span>
+          <span class="text-xs text-slate-500 font-normal">Capture or upload installed AP photo</span>
         </h2>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-          <!-- Slot 1 -->
-          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">1. MAC / Label</span>
-            <div id="photo-preview-1" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
-              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-              <span class="text-[10px] text-slate-500">No photo added</span>
+        <div class="max-w-md mx-auto">
+          <!-- Single Centered Slot: AP MOUNT -->
+          <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50 flex flex-col items-center justify-between min-h-[240px] shadow-inner">
+            <span class="text-xs font-extrabold tracking-wider text-navy-900 uppercase text-center mb-2">AP MOUNT</span>
+            <div id="photo-preview-1" class="w-full flex-1 bg-slate-200/80 rounded-lg border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[160px]">
+              <svg class="w-9 h-9 mb-1.5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><circle cx="12" cy="13" r="3" stroke-width="1.5"></circle></svg>
+              <span class="text-xs font-medium text-slate-500">Tap below to add AP MOUNT photo</span>
             </div>
-            <div class="w-full flex items-center justify-between mt-2 space-x-1">
-              <button type="button" onclick="triggerPhotoCapture(1)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
-              <button type="button" onclick="clearPhoto(1)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
+            <div class="w-full flex items-center justify-between mt-3 space-x-2">
+              <button type="button" onclick="triggerPhotoCapture(1)" class="flex-1 py-2 px-3 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition flex items-center justify-center space-x-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                <span>Snap / Upload Photo</span>
+              </button>
+              <button type="button" onclick="clearPhoto(1)" class="py-2 px-3 text-xs font-semibold rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
             </div>
             <input type="file" id="file-input-1" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 1)">
-          </div>
-
-          <!-- Slot 2 -->
-          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">2. Mounted AP</span>
-            <div id="photo-preview-2" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
-              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-              <span class="text-[10px] text-slate-500">No photo added</span>
-            </div>
-            <div class="w-full flex items-center justify-between mt-2 space-x-1">
-              <button type="button" onclick="triggerPhotoCapture(2)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
-              <button type="button" onclick="clearPhoto(2)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
-            </div>
-            <input type="file" id="file-input-2" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 2)">
-          </div>
-
-          <!-- Slot 3 -->
-          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">3. Patch Outlet</span>
-            <div id="photo-preview-3" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
-              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-              <span class="text-[10px] text-slate-500">No photo added</span>
-            </div>
-            <div class="w-full flex items-center justify-between mt-2 space-x-1">
-              <button type="button" onclick="triggerPhotoCapture(3)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
-              <button type="button" onclick="clearPhoto(3)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
-            </div>
-            <input type="file" id="file-input-3" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 3)">
-          </div>
-
-          <!-- Slot 4 -->
-          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">4. Switch Port</span>
-            <div id="photo-preview-4" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
-              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-              <span class="text-[10px] text-slate-500">No photo added</span>
-            </div>
-            <div class="w-full flex items-center justify-between mt-2 space-x-1">
-              <button type="button" onclick="triggerPhotoCapture(4)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
-              <button type="button" onclick="clearPhoto(4)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
-            </div>
-            <input type="file" id="file-input-4" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 4)">
-          </div>
-
-          <!-- Slot 5 -->
-          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">5. Area View</span>
-            <div id="photo-preview-5" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
-              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-              <span class="text-[10px] text-slate-500">No photo added</span>
-            </div>
-            <div class="w-full flex items-center justify-between mt-2 space-x-1">
-              <button type="button" onclick="triggerPhotoCapture(5)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
-              <button type="button" onclick="clearPhoto(5)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
-            </div>
-            <input type="file" id="file-input-5" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 5)">
-          </div>
-
-          <!-- Slot 6 -->
-          <div class="border border-slate-200 rounded-lg p-2.5 bg-slate-50 flex flex-col items-center justify-between min-h-[160px]">
-            <span class="text-xs font-bold text-slate-700 text-center mb-1">6. Drop Note</span>
-            <div id="photo-preview-6" class="w-full flex-1 bg-slate-200 rounded-md border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative min-h-[90px]">
-              <svg class="w-7 h-7 mb-1 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-              <span class="text-[10px] text-slate-500">No photo added</span>
-            </div>
-            <div class="w-full flex items-center justify-between mt-2 space-x-1">
-              <button type="button" onclick="triggerPhotoCapture(6)" class="flex-1 py-1 px-2 text-[11px] font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition">Snap / Add</button>
-              <button type="button" onclick="clearPhoto(6)" class="py-1 px-2 text-[11px] font-medium rounded bg-slate-200 hover:bg-slate-300 text-slate-700 transition">Clear</button>
-            </div>
-            <input type="file" id="file-input-6" accept="image/*" capture="environment" class="hidden" onchange="handlePhotoSelect(event, 6)">
           </div>
         </div>
       </div>
@@ -335,7 +264,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Field Observations & Cable Notes</label>
-            <textarea id="field_notes" oninput="syncAllFields()" rows="4" placeholder="Note any ceiling obstructions, cable test results, or mounting exceptions..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+            <textarea id="field_notes" oninput="this.value = this.value.toUpperCase(); syncAllFields();" rows="4" placeholder="NOTE ANY CEILING OBSTRUCTIONS, CABLE TEST RESULTS, OR MOUNTING EXCEPTIONS..." class="w-full px-3 py-2 text-sm uppercase border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
           </div>
 
           <div>
@@ -398,10 +327,9 @@
             <h2 class="text-[10px] font-bold text-blue-700 mt-0.5">Access Point Installation & Quality Audit Sheet</h2>
           </div>
           <div class="text-right">
-            <div class="px-2 py-0.5 bg-navy-900 text-white font-mono font-bold rounded text-[11px] tracking-wider uppercase inline-block" id="prev_hostname_badge">
+            <div class="px-2.5 py-1 bg-navy-900 text-white font-mono font-bold rounded text-[11px] tracking-wider uppercase inline-block" id="prev_hostname_badge">
               ST-AP-0504-002
             </div>
-            <span class="text-[9px] text-slate-500 block mt-0.5" id="prev_date_stamp">Date: 2026-11-23</span>
           </div>
         </div>
 
@@ -409,19 +337,19 @@
         <div class="grid grid-cols-4 gap-1.5 bg-slate-50 p-1.5 rounded border border-slate-200 text-[10px]">
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Auditor</span>
-            <span class="font-semibold text-slate-800 truncate block" id="prev_auditor">Gareth Beth</span>
+            <span class="font-semibold text-slate-800 uppercase truncate block" id="prev_auditor">—</span>
           </div>
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Venue / Building</span>
-            <span class="font-semibold text-slate-800 truncate block" id="prev_building">Tottenham Stadium</span>
+            <span class="font-semibold text-slate-800 uppercase truncate block" id="prev_building">TOTTENHAM STADIUM</span>
           </div>
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Floor Level</span>
-            <span class="font-semibold text-slate-800 truncate block" id="prev_floor">L5 - SCR04</span>
+            <span class="font-semibold text-slate-800 uppercase truncate block" id="prev_floor">—</span>
           </div>
           <div>
             <span class="text-[8px] uppercase font-bold text-slate-400 block">Location Ref</span>
-            <span class="font-semibold text-slate-800 truncate block" id="prev_room">F&amp;B BAR</span>
+            <span class="font-semibold text-slate-800 uppercase truncate block" id="prev_room">—</span>
           </div>
         </div>
 
@@ -430,63 +358,26 @@
           <!-- Left Card: PATCHING INFO -->
           <div class="border border-slate-200 rounded p-1.5 space-y-1 bg-white">
             <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[9px] uppercase tracking-wider">PATCHING INFO</h3>
-            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Port ID:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_port_id">SCR/05/04/A1/U30/187</span></div>
-            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Switch ID:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_switch">SW-ACC-01-01-01</span></div>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Port ID:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_port_id">—</span></div>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Switch ID:</span> <span class="font-mono font-bold text-slate-900 uppercase" id="prev_switch">—</span></div>
           </div>
 
           <!-- Right Card: MOUNTING INFO -->
           <div class="border border-slate-200 rounded p-1.5 space-y-1 bg-white">
             <h3 class="font-bold text-navy-900 border-b pb-0.5 text-[9px] uppercase tracking-wider">MOUNTING INFO</h3>
-            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Mounting Type:</span> <span class="font-semibold text-slate-900" id="prev_mount">Pole/Truss</span></div>
+            <div class="flex justify-between text-[10px]"><span class="text-slate-500">Mounting Type:</span> <span class="font-semibold text-slate-900 uppercase" id="prev_mount">POLE/TRUSS</span></div>
             <div class="flex justify-between text-[10px]"><span class="text-slate-500">Audit Status:</span> <span class="font-bold text-emerald-700 uppercase" id="prev_status">COMPLETED &amp; VERIFIED</span></div>
           </div>
         </div>
 
-        <!-- 6 Photo Grid (Enlarged 66mm Container Height - Fills Empty A4 Space Proportionally) -->
+        <!-- Single Centered Photo Record (AP MOUNT - 135mm Container Height for Optimal A4 Balance) -->
         <div>
-          <h3 class="font-bold text-navy-900 text-[9px] uppercase tracking-wider mb-1">Photographic Verification Records (6 Slots)</h3>
-          <div class="grid grid-cols-3 gap-1.5">
-            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">1. MAC / Label</span>
-              <div class="w-full h-[66mm] max-h-[66mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
-                <img id="prev-img-1" class="max-w-full max-h-full w-auto h-auto object-contain hidden block mx-auto my-auto" alt="Label">
-                <span id="prev-placeholder-1" class="text-[8px] text-slate-400">No Image</span>
-              </div>
-            </div>
-            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">2. Mounted AP</span>
-              <div class="w-full h-[66mm] max-h-[66mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
-                <img id="prev-img-2" class="max-w-full max-h-full w-auto h-auto object-contain hidden block mx-auto my-auto" alt="Mounted">
-                <span id="prev-placeholder-2" class="text-[8px] text-slate-400">No Image</span>
-              </div>
-            </div>
-            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">3. Patch Outlet</span>
-              <div class="w-full h-[66mm] max-h-[66mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
-                <img id="prev-img-3" class="max-w-full max-h-full w-auto h-auto object-contain hidden block mx-auto my-auto" alt="Patch">
-                <span id="prev-placeholder-3" class="text-[8px] text-slate-400">No Image</span>
-              </div>
-            </div>
-            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">4. Switch Port</span>
-              <div class="w-full h-[66mm] max-h-[66mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
-                <img id="prev-img-4" class="max-w-full max-h-full w-auto h-auto object-contain hidden block mx-auto my-auto" alt="Switch">
-                <span id="prev-placeholder-4" class="text-[8px] text-slate-400">No Image</span>
-              </div>
-            </div>
-            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">5. Area View</span>
-              <div class="w-full h-[66mm] max-h-[66mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
-                <img id="prev-img-5" class="max-w-full max-h-full w-auto h-auto object-contain hidden block mx-auto my-auto" alt="Area">
-                <span id="prev-placeholder-5" class="text-[8px] text-slate-400">No Image</span>
-              </div>
-            </div>
-            <div class="border border-slate-200 rounded p-1 text-center bg-slate-50">
-              <span class="text-[8px] font-semibold text-slate-600 block mb-0.5 truncate">6. Drop Note</span>
-              <div class="w-full h-[66mm] max-h-[66mm] bg-slate-100 rounded overflow-hidden flex items-center justify-center p-0.5 border border-slate-200">
-                <img id="prev-img-6" class="max-w-full max-h-full w-auto h-auto object-contain hidden block mx-auto my-auto" alt="Notes">
-                <span id="prev-placeholder-6" class="text-[8px] text-slate-400">No Image</span>
-              </div>
+          <h3 class="font-bold text-navy-900 text-[9px] uppercase tracking-wider mb-1">AP MOUNT PHOTOGRAPHIC VERIFICATION</h3>
+          <div class="border border-slate-200 rounded-md p-2 text-center bg-slate-50">
+            <span class="text-[10px] font-extrabold tracking-wider text-navy-900 uppercase block mb-1">AP MOUNT</span>
+            <div class="w-full h-[135mm] max-h-[135mm] bg-slate-50 rounded overflow-hidden flex items-center justify-center p-1 border border-slate-200">
+              <img id="prev-img-1" class="max-w-full max-h-full w-auto h-auto object-contain hidden block mx-auto my-auto" alt="AP MOUNT">
+              <span id="prev-placeholder-1" class="text-[10px] font-medium text-slate-400 uppercase">NO AP MOUNT IMAGE ATTACHED</span>
             </div>
           </div>
         </div>
@@ -495,8 +386,8 @@
         <div class="grid grid-cols-3 gap-2 border-t border-slate-200 pt-1.5">
           <div class="col-span-2">
             <span class="text-[8px] font-bold text-slate-500 uppercase block mb-0.5">Field Notes &amp; Observations</span>
-            <p id="prev_notes" class="text-[9px] text-slate-700 italic bg-slate-50 p-1.5 rounded border border-slate-200 h-9 overflow-hidden leading-tight">
-              No notes entered.
+            <p id="prev_notes" class="text-[9px] text-slate-700 uppercase bg-slate-50 p-1.5 rounded border border-slate-200 h-9 overflow-hidden leading-tight">
+              NO NOTES ENTERED.
             </p>
           </div>
           <div class="text-center">
@@ -518,536 +409,307 @@
 
   <!-- APPLICATION LOGIC JAVASCRIPT -->
   <script>
-    const photoData = [null, null, null, null, null, null, null];
+    const photoData = [null, null];
 
     let sigCanvas, sigCtx;
     let isSigning = false;
 
-    window.onload = function() {
-      const dateEl = document.getElementById('install_date');
-      if (dateEl && !dateEl.value) {
-        dateEl.value = new Date().toISOString().split('T')[0];
-      }
+    // Enforce uppercase across all text inputs & textareas globally (handles typing, pasting, autofill)
+    function enforceAllUppercase() {
+      document.querySelectorAll('input[type="text"], textarea').forEach((el) => {
+        if (el.value && el.value !== el.value.toUpperCase()) {
+          el.value = el.value.toUpperCase();
+        }
+      });
+    }
 
+    document.addEventListener('input', (e) => {
+      if (e.target && (e.target.matches('input[type="text"]') || e.target.matches('textarea'))) {
+        const start = e.target.selectionStart;
+        const end = e.target.selectionEnd;
+        const upper = e.target.value.toUpperCase();
+        if (e.target.value !== upper) {
+          e.target.value = upper;
+          if (typeof start === 'number' && typeof end === 'number') {
+            e.target.setSelectionRange(start, end);
+          }
+        }
+      }
+    }, true);
+
+    window.addEventListener('DOMContentLoaded', async () => {
       initSignaturePad();
-      const urlLoaded = loadFromUrlParams();
-      if (!urlLoaded) {
+      enforceAllUppercase();
+      const loadedFromUrl = await loadFromUrlParams();
+      if (!loadedFromUrl) {
         loadDraftFromStorage();
       }
+      enforceAllUppercase();
       syncAllFields();
-    };
+    });
 
     function switchTab(tabName) {
-      const formTab = document.getElementById('tab-content-form');
-      const previewTab = document.getElementById('tab-content-preview');
-      const btnForm = document.getElementById('tab-btn-form');
-      const btnPreview = document.getElementById('tab-btn-preview');
-
-      if (tabName === 'form') {
-        formTab.classList.remove('hidden');
-        previewTab.classList.add('hidden');
-        btnForm.className = "py-2.5 px-4 border-b-2 border-blue-400 text-blue-400 font-semibold flex items-center space-x-2";
-        btnPreview.className = "py-2.5 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2";
-      } else {
-        syncAllFields();
-        formTab.classList.add('hidden');
-        previewTab.classList.remove('hidden');
-        btnPreview.className = "py-2.5 px-4 border-b-2 border-blue-400 text-blue-400 font-semibold flex items-center space-x-2";
-        btnForm.className = "py-2.5 px-4 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center space-x-2";
-      }
-    }
-
-    function showToast(message, isError = false) {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = `pointer-events-auto px-4 py-2.5 rounded-lg shadow-lg text-xs font-semibold text-white transition-all transform duration-300 translate-y-2 ${isError ? 'bg-rose-600' : 'bg-navy-900 border border-slate-700'}`;
-      toast.textContent = message;
-      container.appendChild(toast);
-      setTimeout(() => toast.classList.remove('translate-y-2'), 10);
-      setTimeout(() => {
-        toast.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-
-    function getSelectedMountType() {
-      const radios = document.getElementsByName('mount_type');
-      for (const radio of radios) {
-        if (radio.checked) return radio.value;
-      }
-      return 'Pole/Truss';
-    }
-
-    // FORM & PREVIEW SYNCHRONIZATION WITH AUTO-UPPERCASE
-    function syncAllFields() {
-      const apHostnameEl = document.getElementById('ap_hostname');
-      if (apHostnameEl) apHostnameEl.value = apHostnameEl.value.toUpperCase();
-      const portIdEl = document.getElementById('port_id');
-      if (portIdEl) portIdEl.value = portIdEl.value.toUpperCase();
-      const roomGridEl = document.getElementById('room_grid');
-      if (roomGridEl) roomGridEl.value = roomGridEl.value.toUpperCase();
-      const switchIdEl = document.getElementById('switch_id');
-      if (switchIdEl) switchIdEl.value = switchIdEl.value.toUpperCase();
-
-      const hostname = apHostnameEl ? apHostnameEl.value.trim() : '';
-      document.getElementById('prev_hostname_badge').textContent = hostname ? hostname.toUpperCase() : '—';
-
-      const auditor = document.getElementById('auditor_name').value.trim();
-      document.getElementById('prev_auditor').textContent = auditor || '—';
-
-      const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
-      document.getElementById('prev_date_stamp').textContent = `Date: ${dateVal}`;
-
-      const building = document.getElementById('building_name').value.trim() || 'Tottenham Stadium';
-      document.getElementById('prev_building').textContent = building;
-
-      const floor = document.getElementById('floor_level').value.trim();
-      document.getElementById('prev_floor').textContent = floor || '—';
-
-      const room = roomGridEl ? roomGridEl.value.trim() : '';
-      document.getElementById('prev_room').textContent = room ? room.toUpperCase() : '—';
-
-      const portId = portIdEl ? portIdEl.value.trim() : '';
-      document.getElementById('prev_port_id').textContent = portId ? portId.toUpperCase() : '—';
-
-      const switchVal = switchIdEl ? switchIdEl.value.trim() : '';
-      document.getElementById('prev_switch').textContent = switchVal ? switchVal.toUpperCase() : '—';
-
-      document.getElementById('prev_mount').textContent = getSelectedMountType();
-
-      const statusEl = document.getElementById('audit_status');
-      const statusVal = statusEl ? statusEl.value : 'COMPLETED & VERIFIED';
-      const prevStatusEl = document.getElementById('prev_status');
-      prevStatusEl.textContent = statusVal;
-      if (statusVal.includes('COMPLETED')) {
-        prevStatusEl.className = 'font-bold text-emerald-700 uppercase';
-      } else if (statusVal.includes('PENDING')) {
-        prevStatusEl.className = 'font-bold text-amber-700 uppercase';
-      } else {
-        prevStatusEl.className = 'font-bold text-rose-700 uppercase';
-      }
-
-      const notes = document.getElementById('field_notes').value.trim();
-      document.getElementById('prev_notes').textContent = notes || 'No notes entered.';
-
-      for (let i = 1; i <= 6; i++) {
-        const prevImg = document.getElementById(`prev-img-${i}`);
-        const prevPlace = document.getElementById(`prev-placeholder-${i}`);
-        if (photoData[i]) {
-          prevImg.src = photoData[i];
-          prevImg.classList.remove('hidden');
-          prevPlace.classList.add('hidden');
-        } else {
-          prevImg.classList.add('hidden');
-          prevPlace.classList.remove('hidden');
-        }
-      }
-
-      if (sigCanvas) {
-        const sigImg = document.getElementById('prev_signature_img');
-        const sigPlace = document.getElementById('prev_sig_placeholder');
-        if (isCanvasBlank(sigCanvas)) {
-          sigImg.classList.add('hidden');
-          sigPlace.classList.remove('hidden');
-        } else {
-          sigImg.src = sigCanvas.toDataURL();
-          sigImg.classList.remove('hidden');
-          sigPlace.classList.add('hidden');
-        }
-      }
-    }
-
-    function isCanvasBlank(canvas) {
-      const context = canvas.getContext('2d');
-      const pixelBuffer = new Uint32Array(
-        context.getImageData(0, 0, canvas.width, canvas.height).data.buffer
-      );
-      return !pixelBuffer.some(color => color !== 0);
-    }
-
-    function initSignaturePad() {
-      sigCanvas = document.getElementById('signature-pad');
-      if (!sigCanvas) return;
-      sigCtx = sigCanvas.getContext('2d');
-
-      const rect = sigCanvas.getBoundingClientRect();
-      sigCanvas.width = rect.width * 2;
-      sigCanvas.height = rect.height * 2;
-      sigCtx.scale(2, 2);
-      sigCtx.strokeStyle = '#0f172a';
-      sigCtx.lineWidth = 2.5;
-      sigCtx.lineCap = 'round';
-
-      function getPos(e) {
-        const r = sigCanvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { x: clientX - r.left, y: clientY - r.top };
-      }
-
-      function startDraw(e) {
-        isSigning = true;
-        const p = getPos(e);
-        sigCtx.beginPath();
-        sigCtx.moveTo(p.x, p.y);
-        e.preventDefault();
-      }
-
-      function moveDraw(e) {
-        if (!isSigning) return;
-        const p = getPos(e);
-        sigCtx.lineTo(p.x, p.y);
-        sigCtx.stroke();
-        e.preventDefault();
-      }
-
-      function stopDraw() {
-        if (isSigning) {
-          isSigning = false;
-          syncAllFields();
-        }
-      }
-
-      sigCanvas.addEventListener('mousedown', startDraw);
-      sigCanvas.addEventListener('mousemove', moveDraw);
-      sigCanvas.addEventListener('mouseup', stopDraw);
-      sigCanvas.addEventListener('mouseleave', stopDraw);
-
-      sigCanvas.addEventListener('touchstart', startDraw, { passive: false });
-      sigCanvas.addEventListener('touchmove', moveDraw, { passive: false });
-      sigCanvas.addEventListener('touchend', stopDraw);
-    }
-
-    function clearSignature() {
-      if (sigCtx && sigCanvas) {
-        sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-        syncAllFields();
-        showToast('Signature cleared');
-      }
-    }
-
-    function triggerPhotoCapture(slot) {
-      const fileInput = document.getElementById(`file-input-${slot}`);
-      if (fileInput) fileInput.click();
-    }
-
-    function handlePhotoSelect(event, slot) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 1200;
-          let w = img.width;
-          let h = img.height;
-          if (w > maxDim || h > maxDim) {
-            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
-            else { w = Math.round((w * maxDim) / h); h = maxDim; }
-          }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const compressedData = canvas.toDataURL('image/jpeg', 0.88);
-
-          photoData[slot] = compressedData;
-          updatePhotoSlotUI(slot);
-          syncAllFields();
-          saveDraftToStorage(false);
-          showToast(`Photo ${slot} added`);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function updatePhotoSlotUI(slot) {
-      const container = document.getElementById(`photo-preview-${slot}`);
+// ... existing code ... -->
+    function updatePhotoSlotUI(slotIndex) {
+      const container = document.getElementById(`photo-preview-${slotIndex}`);
       if (!container) return;
-      if (photoData[slot]) {
-        container.innerHTML = `<img src="${photoData[slot]}" class="w-full h-full object-contain rounded-md" alt="Slot ${slot}">`;
+      if (photoData[slotIndex]) {
+        container.innerHTML = `<img src="${photoData[slotIndex]}" class="max-w-full max-h-[180px] w-auto h-auto object-contain rounded" alt="AP MOUNT">`;
       } else {
         container.innerHTML = `
-          <svg class="w-7 h-7 mb-1 stroke-current text-slate-400" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
-          <span class="text-[10px] text-slate-500">No photo added</span>
+          <svg class="w-9 h-9 mb-1.5 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h0.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><circle cx="12" cy="13" r="3" stroke-width="1.5"></circle></svg>
+          <span class="text-xs font-medium text-slate-500">Tap below to add AP MOUNT photo</span>
         `;
       }
     }
 
-    function clearPhoto(slot) {
-      photoData[slot] = null;
-      updatePhotoSlotUI(slot);
+    function clearPhoto(slotIndex) {
+      photoData[slotIndex] = null;
+      const input = document.getElementById(`file-input-${slotIndex}`);
+      if (input) input.value = '';
+      updatePhotoSlotUI(slotIndex);
       syncAllFields();
       saveDraftToStorage(false);
-      showToast(`Photo ${slot} removed`);
     }
 
-    function saveDraftToStorage(notify = true) {
-      try {
-        const draft = {
-          auditor_name: document.getElementById('auditor_name').value,
-          install_date: document.getElementById('install_date').value,
-          building_name: document.getElementById('building_name').value,
-          floor_level: document.getElementById('floor_level').value,
-          ap_hostname: document.getElementById('ap_hostname').value.toUpperCase(),
-          port_id: document.getElementById('port_id').value.toUpperCase(),
-          room_grid: document.getElementById('room_grid').value.toUpperCase(),
-          switch_id: document.getElementById('switch_id').value.toUpperCase(),
-          mount_type: getSelectedMountType(),
-          audit_status: document.getElementById('audit_status').value,
-          field_notes: document.getElementById('field_notes').value,
-          photoData: photoData
-        };
-        localStorage.setItem('tottenham_ap_audit_draft_v12', JSON.stringify(draft));
-        if (notify) showToast('Draft saved to local storage');
-      } catch (err) {
-        console.warn('Storage warning:', err);
-        if (notify) showToast('Draft saved');
+    // LIVE FIELD SYNCHRONIZATION (ALL TEXT ENFORCED UPPERCASE)
+    function syncAllFields() {
+      enforceAllUppercase();
+
+      const auditor = (document.getElementById('auditor_name').value.trim() || '—').toUpperCase();
+      const building = (document.getElementById('building_name').value.trim() || 'TOTTENHAM STADIUM').toUpperCase();
+      const floor = (document.getElementById('floor_level').value.trim() || '—').toUpperCase();
+      const hostname = (document.getElementById('ap_hostname').value.trim() || '—').toUpperCase();
+      const portId = (document.getElementById('port_id').value.trim() || '—').toUpperCase();
+      const room = (document.getElementById('room_grid').value.trim() || '—').toUpperCase();
+      const swId = (document.getElementById('switch_id').value.trim() || '—').toUpperCase();
+
+      const mountRadio = document.querySelector('input[name="mount_type"]:checked');
+      const mount = (mountRadio ? mountRadio.value : 'POLE/TRUSS').toUpperCase();
+      const status = document.getElementById('audit_status').value.toUpperCase();
+
+      document.getElementById('prev_hostname_badge').textContent = hostname;
+      document.getElementById('prev_auditor').textContent = auditor;
+      document.getElementById('prev_building').textContent = building;
+      document.getElementById('prev_floor').textContent = floor;
+      document.getElementById('prev_room').textContent = room;
+
+      document.getElementById('prev_port_id').textContent = portId;
+      document.getElementById('prev_switch').textContent = swId;
+      document.getElementById('prev_mount').textContent = mount;
+
+      const statusEl = document.getElementById('prev_status');
+      statusEl.textContent = status;
+      statusEl.className = 'font-bold uppercase ' + (
+        status.includes('COMPLETED') ? 'text-emerald-700' :
+        status.includes('PENDING') ? 'text-amber-600' : 'text-rose-600'
+      );
+
+      const notes = document.getElementById('field_notes').value.trim().toUpperCase();
+      document.getElementById('prev_notes').textContent = notes || 'NO NOTES ENTERED.';
+
+      const prevImg = document.getElementById('prev-img-1');
+      const prevPlace = document.getElementById('prev-placeholder-1');
+      if (photoData[1]) {
+        prevImg.src = photoData[1];
+        prevImg.classList.remove('hidden');
+        prevPlace.classList.add('hidden');
+      } else {
+        prevImg.classList.add('hidden');
+        prevPlace.classList.remove('hidden');
       }
-    }
 
-    // COMPRESS PHOTOS AGGRESSIVELY FOR STREAMLINED URL PAYLOADS (< 15KB TOTAL)
-    async function compressPhotoForShare(dataUrl) {
-      if (!dataUrl) return null;
+      if (sigCanvas) {
+// ... existing code ... -->
+    // HELPER: COMPRESS SINGLE AP MOUNT PHOTO INTO CRISP SHAREABLE THUMBNAIL (320px, 0.72 quality)
+    function compressPhotoForShare(dataUrl) {
       return new Promise((resolve) => {
+        if (!dataUrl) return resolve(null);
         const img = new Image();
         img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const maxDim = 180; // Optimized thumbnail resolution for high-compression URL payloads
-          let w = img.width, h = img.height;
-          if (w > maxDim || h > maxDim) {
-            if (w > h) { h = Math.round((h * maxDim) / w); w = maxDim; }
-            else { w = Math.round((w * maxDim) / h); h = maxDim; }
+          const maxDim = 320;
+          let w = img.width;
+          let h = img.height;
+          if (w > h && w > maxDim) {
+            h = Math.round((h * maxDim) / w);
+            w = maxDim;
+          } else if (h >= w && h > maxDim) {
+            w = Math.round((w * maxDim) / h);
+            h = maxDim;
           }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
+          const c = document.createElement('canvas');
+          c.width = w;
+          c.height = h;
+          const ctx = c.getContext('2d');
           ctx.drawImage(img, 0, 0, w, h);
-          resolve(canvas.toDataURL('image/jpeg', 0.35));
+          resolve(c.toDataURL('image/jpeg', 0.72));
         };
         img.onerror = () => resolve(null);
         img.src = dataUrl;
       });
     }
 
-    // NATIVE BROWSER DEFLATE STREAM COMPRESSION / DECOMPRESSION
-    async function compressTextStream(text) {
-      if (typeof CompressionStream !== 'undefined') {
-        try {
-          const stream = new Blob([text]).stream().pipeThrough(new CompressionStream('deflate-raw'));
-          const buffer = await new Response(stream).arrayBuffer();
-          const bytes = new Uint8Array(buffer);
-          let binary = '';
-          for (let i = 0; i < bytes.byteLength; i++) {
-            binary += String.fromCharCode(bytes[i]);
-          }
-          return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-        } catch (e) {
-          console.warn('Stream compression fallback:', e);
-        }
-      }
-      return encodeURIComponent(btoa(encodeURIComponent(text)));
-    }
-
-    async function decompressTextStream(encodedStr) {
-      if (typeof DecompressionStream !== 'undefined') {
-        try {
-          let base64 = encodedStr.replace(/-/g, '+').replace(/_/g, '/');
-          while (base64.length % 4) base64 += '=';
-          const binaryStr = atob(base64);
-          const bytes = new Uint8Array(binaryStr.length);
-          for (let i = 0; i < binaryStr.length; i++) {
-            bytes[i] = binaryStr.charCodeAt(i);
-          }
-          const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
-          return await new Response(stream).text();
-        } catch (e) {
-          console.warn('Stream decompression fallback:', e);
-        }
-      }
-      try {
-        return decodeURIComponent(atob(decodeURIComponent(encodedStr)));
-      } catch (e) {
-        return atob(decodeURIComponent(encodedStr));
-      }
-    }
-
-    // GENERATE & SHARE A DIRECT DEEP-LINK CONTAINING METADATA AND COMPRESSED PHOTOS
+    // GENERATE & SHARE A DIRECT DEEP-LINK CONTAINING UPPERCASE METADATA & AP MOUNT PHOTO
     async function shareFormLink() {
       syncAllFields();
       saveDraftToStorage(false);
 
-      showToast('Compressing audit details & photos...');
+      showToast('Compressing audit details & AP MOUNT photo...');
 
-      const compressedPhotos = [null];
-      let photoCount = 0;
-      for (let i = 1; i <= 6; i++) {
-        if (photoData[i]) {
-          const thumb = await compressPhotoForShare(photoData[i]);
-          compressedPhotos[i] = thumb;
-          if (thumb) photoCount++;
-        } else {
-          compressedPhotos[i] = null;
-        }
+      const compressedPhotos = [null, null];
+      let hasPhoto = false;
+      if (photoData[1]) {
+        const thumb = await compressPhotoForShare(photoData[1]);
+        compressedPhotos[1] = thumb;
+        if (thumb) hasPhoto = true;
       }
 
       const draft = {
-        auditor_name: document.getElementById('auditor_name').value,
-        install_date: document.getElementById('install_date').value,
-        building_name: document.getElementById('building_name').value,
-        floor_level: document.getElementById('floor_level').value,
+        auditor_name: document.getElementById('auditor_name').value.toUpperCase(),
+        building_name: document.getElementById('building_name').value.toUpperCase(),
+        floor_level: document.getElementById('floor_level').value.toUpperCase(),
         ap_hostname: document.getElementById('ap_hostname').value.toUpperCase(),
         port_id: document.getElementById('port_id').value.toUpperCase(),
         room_grid: document.getElementById('room_grid').value.toUpperCase(),
         switch_id: document.getElementById('switch_id').value.toUpperCase(),
-        mount_type: getSelectedMountType(),
-        audit_status: document.getElementById('audit_status').value,
-        field_notes: document.getElementById('field_notes').value,
+        field_notes: document.getElementById('field_notes').value.toUpperCase(),
+        audit_status: document.getElementById('audit_status').value.toUpperCase(),
+        mount_type: document.querySelector('input[name="mount_type"]:checked')?.value || 'Pole/Truss',
         photos: compressedPhotos
       };
 
       try {
         const jsonStr = JSON.stringify(draft);
-        const compressedB64 = await compressTextStream(jsonStr);
-        const baseUrl = window.location.origin + window.location.pathname;
-        const shareUrl = `${baseUrl}?audit=${compressedB64}`;
+        const compressedPayload = await compressTextStream(jsonStr);
 
-        const apName = draft.ap_hostname || 'AP Audit';
+        const baseUrl = window.location.origin + window.location.pathname;
+        const shareUrl = `${baseUrl}?audit=${compressedPayload}`;
+        const hostnameLabel = draft.ap_hostname.trim() || 'AP AUDIT';
+        const shareTitle = `AuditForm - ${hostnameLabel}`;
+        const photoStatus = hasPhoto ? 'AP MOUNT photo attached' : 'no photo attached';
+        const shareText = `AuditForm (${hostnameLabel} - ${photoStatus})`;
 
         if (navigator.share) {
           navigator.share({
-            title: `Tottenham AP Audit - ${apName}`,
-            text: `AP Installation Audit Form for ${apName} (${photoCount} photos attached)`,
+            title: shareTitle,
+            text: shareText,
             url: shareUrl
-          }).then(() => {
-            showToast('Form & photos link shared!');
-          }).catch(() => {
-            copyTextToClipboard(shareUrl, `Link with ${photoCount} photos copied for ${apName}!`);
-          });
+          }).catch(() => {});
         } else {
-          copyTextToClipboard(shareUrl, `Link with ${photoCount} photos copied for ${apName}!`);
+          copyTextFallback(shareUrl);
+          showToast(`Share link copied for ${hostnameLabel} (${photoStatus})!`);
         }
       } catch (err) {
-        console.error('Error generating link:', err);
-        showToast('Could not generate URL link', true);
+        console.error('Error generating share link:', err);
+        showToast('Could not generate link.', true);
       }
     }
 
-    function copyTextToClipboard(text, successMsg) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast(successMsg);
-        }).catch(() => fallbackCopy(text, successMsg));
-      } else {
-        fallbackCopy(text, successMsg);
-      }
-    }
-
-    function fallbackCopy(text, successMsg) {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      try {
-        document.execCommand('copy');
-        showToast(successMsg);
-      } catch (err) {
-        showToast('Copy failed. Please copy URL manually.', true);
-      }
-      document.body.removeChild(textarea);
-    }
-
+    // READ INCOMING URL DATA ON PAGE LOAD & HYDRATE FORM + AP MOUNT PHOTO
     async function loadFromUrlParams() {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        let b64 = urlParams.get('audit');
-        if (!b64 && window.location.hash.startsWith('#audit=')) {
-          b64 = window.location.hash.substring(7);
+        const params = new URLSearchParams(window.location.search);
+        let encoded = params.get('audit');
+
+        if (!encoded && window.location.hash.includes('audit=')) {
+          const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+          encoded = hashParams.get('audit');
         }
-        if (!b64) return false;
 
-        const decompressedJson = await decompressTextStream(b64);
-        const draft = JSON.parse(decompressedJson);
+        if (!encoded) return false;
 
-        document.getElementById('auditor_name').value = draft.auditor_name || '';
-        document.getElementById('install_date').value = draft.install_date || '';
-        document.getElementById('building_name').value = draft.building_name || 'Tottenham Stadium';
-        document.getElementById('floor_level').value = draft.floor_level || '';
-        document.getElementById('ap_hostname').value = (draft.ap_hostname || '').toUpperCase();
-        document.getElementById('port_id').value = (draft.port_id || '').toUpperCase();
-        document.getElementById('room_grid').value = (draft.room_grid || '').toUpperCase();
-        document.getElementById('switch_id').value = (draft.switch_id || '').toUpperCase();
-        if (draft.audit_status) document.getElementById('audit_status').value = draft.audit_status;
+        const jsonStr = await decompressTextStream(encoded);
+        const draft = JSON.parse(jsonStr);
 
+        const textFields = ['auditor_name', 'building_name', 'floor_level', 'ap_hostname', 'port_id', 'room_grid', 'switch_id', 'field_notes'];
+        textFields.forEach((id) => {
+          if (draft[id] !== undefined && draft[id] !== null && document.getElementById(id)) {
+            document.getElementById(id).value = String(draft[id]).toUpperCase();
+          }
+        });
+
+        if (draft.audit_status && document.getElementById('audit_status')) {
+          document.getElementById('audit_status').value = String(draft.audit_status).toUpperCase();
+        }
         if (draft.mount_type) {
-          const radios = document.getElementsByName('mount_type');
-          for (const radio of radios) {
-            radio.checked = (radio.value === draft.mount_type);
-          }
+          const radio = document.querySelector(`input[name="mount_type"][value="${draft.mount_type}"]`);
+          if (radio) radio.checked = true;
         }
 
-        document.getElementById('field_notes').value = draft.field_notes || '';
-
-        // Hydrate Photos Transferred via Compressed URL Payload
-        let loadedPhotosCount = 0;
-        if (draft.photos && Array.isArray(draft.photos)) {
-          for (let i = 1; i <= 6; i++) {
-            if (draft.photos[i]) {
-              photoData[i] = draft.photos[i];
-              updatePhotoSlotUI(i);
-              loadedPhotosCount++;
-            } else {
-              photoData[i] = null;
-              updatePhotoSlotUI(i);
-            }
-          }
+        // Hydrate Single AP MOUNT Photo Transferred via Compressed URL Payload
+        let hasLoadedPhoto = false;
+        if (draft.photos && Array.isArray(draft.photos) && draft.photos[1]) {
+          photoData[1] = draft.photos[1];
+          updatePhotoSlotUI(1);
+          hasLoadedPhoto = true;
+        } else {
+          photoData[1] = null;
+          updatePhotoSlotUI(1);
         }
 
         syncAllFields();
-        showToast(`Loaded AP Audit link for ${draft.ap_hostname || 'AP'} (${loadedPhotosCount} photos attached)`);
+        saveDraftToStorage(false);
+
+        const apName = (draft.ap_hostname || '').trim().toUpperCase();
+        const photoNote = hasLoadedPhoto ? 'with AP MOUNT photo' : 'text details only';
+        showToast(apName ? `Loaded AuditForm for ${apName} (${photoNote})` : `Loaded shared AuditForm (${photoNote})`);
         return true;
       } catch (err) {
-        console.warn('Could not parse URL audit params:', err);
+        console.warn('Could not decode audit URL parameter:', err);
         return false;
+      }
+    }
+
+    function copyTextFallback(text) {
+// ... existing code ... -->
+    // LOCAL DRAFT STORAGE (SAVES TEXT + AP MOUNT PHOTO)
+    function saveDraftToStorage(notify = true) {
+      enforceAllUppercase();
+      const draft = {
+        auditor_name: document.getElementById('auditor_name').value.toUpperCase(),
+        building_name: document.getElementById('building_name').value.toUpperCase(),
+        floor_level: document.getElementById('floor_level').value.toUpperCase(),
+        ap_hostname: document.getElementById('ap_hostname').value.toUpperCase(),
+        port_id: document.getElementById('port_id').value.toUpperCase(),
+        room_grid: document.getElementById('room_grid').value.toUpperCase(),
+        switch_id: document.getElementById('switch_id').value.toUpperCase(),
+        field_notes: document.getElementById('field_notes').value.toUpperCase(),
+        audit_status: document.getElementById('audit_status').value.toUpperCase(),
+        mount_type: document.querySelector('input[name="mount_type"]:checked')?.value || 'Pole/Truss',
+        photoData: [null, photoData[1] || null]
+      };
+      try {
+        localStorage.setItem('tottenham_ap_audit_v2', JSON.stringify(draft));
+        if (notify) showToast('Draft saved locally');
+      } catch (err) {
+        console.warn('Storage quota exceeded:', err);
+        if (notify) showToast('Draft saved (photo too large for local cache)', true);
       }
     }
 
     function loadDraftFromStorage() {
       try {
-        const data = localStorage.getItem('tottenham_ap_audit_draft_v12') || localStorage.getItem('tottenham_ap_audit_draft_v10') || localStorage.getItem('tottenham_ap_audit_draft');
-        if (!data) return;
-        const draft = JSON.parse(data);
-        if (draft.auditor_name) document.getElementById('auditor_name').value = draft.auditor_name;
-        if (draft.install_date) document.getElementById('install_date').value = draft.install_date;
-        if (draft.building_name) document.getElementById('building_name').value = draft.building_name;
-        if (draft.floor_level) document.getElementById('floor_level').value = draft.floor_level;
-        if (draft.ap_hostname) document.getElementById('ap_hostname').value = draft.ap_hostname.toUpperCase();
-        if (draft.port_id) document.getElementById('port_id').value = draft.port_id.toUpperCase();
-        if (draft.room_grid) document.getElementById('room_grid').value = draft.room_grid.toUpperCase();
-        if (draft.switch_id) document.getElementById('switch_id').value = draft.switch_id.toUpperCase();
-        if (draft.audit_status) document.getElementById('audit_status').value = draft.audit_status;
+        const raw = localStorage.getItem('tottenham_ap_audit_v2');
+        if (!raw) return;
+        const draft = JSON.parse(raw);
 
-        if (draft.mount_type) {
-          const radios = document.getElementsByName('mount_type');
-          for (const radio of radios) {
-            if (radio.value === draft.mount_type) radio.checked = true;
+        const textFields = ['auditor_name', 'building_name', 'floor_level', 'ap_hostname', 'port_id', 'room_grid', 'switch_id', 'field_notes'];
+        textFields.forEach((id) => {
+          if (draft[id] !== undefined && draft[id] !== null && document.getElementById(id)) {
+            document.getElementById(id).value = String(draft[id]).toUpperCase();
           }
+        });
+
+        if (draft.audit_status && document.getElementById('audit_status')) {
+          document.getElementById('audit_status').value = String(draft.audit_status).toUpperCase();
         }
-
-        if (draft.field_notes) document.getElementById('field_notes').value = draft.field_notes;
-
-        if (draft.photoData && Array.isArray(draft.photoData)) {
-          for (let i = 1; i <= 6; i++) {
-            if (draft.photoData[i]) {
-              photoData[i] = draft.photoData[i];
-              updatePhotoSlotUI(i);
-            }
-          }
+        if (draft.mount_type) {
+          const radio = document.querySelector(`input[name="mount_type"][value="${draft.mount_type}"]`);
+          if (radio) radio.checked = true;
+        }
+        if (draft.photoData && Array.isArray(draft.photoData) && draft.photoData[1]) {
+          photoData[1] = draft.photoData[1];
+          updatePhotoSlotUI(1);
         }
       } catch (err) {
         console.warn('Error loading draft:', err);
@@ -1060,10 +722,10 @@
         if (el) el.value = '';
       });
       document.getElementById('audit_status').value = 'COMPLETED & VERIFIED';
-      for (let i = 1; i <= 6; i++) {
-        photoData[i] = null;
-        updatePhotoSlotUI(i);
-      }
+      photoData[1] = null;
+      const input1 = document.getElementById('file-input-1');
+      if (input1) input1.value = '';
+      updatePhotoSlotUI(1);
       clearSignature();
       syncAllFields();
       saveDraftToStorage(false);
@@ -1082,10 +744,9 @@
       }
 
       const element = document.getElementById('print-sheet');
-      const hostname = document.getElementById('ap_hostname').value.trim().toUpperCase() || 'AP';
+      const hostname = document.getElementById('ap_hostname').value.trim().toUpperCase() || 'AP_AUDIT';
       const cleanHostname = hostname.replace(/[^A-Z0-9_-]/g, '_');
-      const dateVal = document.getElementById('install_date').value || new Date().toISOString().split('T')[0];
-      const filename = `${cleanHostname}_${dateVal}.pdf`;
+      const filename = `${cleanHostname}.pdf`;
 
       showToast('Generating 1-Page PDF File...');
 
